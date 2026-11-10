@@ -1,0 +1,73 @@
+
+# =====================================
+# OS Files (Windows & macOS)
+# =====================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100/
+.Trashes/
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# =====================================
+# LaTeX Auxiliary Files
+# =====================================
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.xdy
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.dvi
+
+# =====================================
+# LaTeX Build Directories
+# =====================================
+_build/
+build/
+out/
+
+# =====================================
+# Editor / IDE
+# =====================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =====================================
+# Temporary Files
+# =====================================
+*.tmp
+*.bak
+*.temp
+
+# =====================================
+# Sensitive Files
+# =====================================
+.env
+.env.*
+!.env.example

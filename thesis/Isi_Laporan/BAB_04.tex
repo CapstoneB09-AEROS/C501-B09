@@ -1,0 +1,68 @@
+
+\section{Luaran \textit{Capstone Project} beserta Spesifikasinya}
+\label{sec:Luaran_Spesifikasi}
+    
+    Pada bagian ini, mahasiswa menjelaskan luaran (\textit{output}) apa yang dijanjikan di akhir periode capstone. Bagian ini harus disinkronkan dengan lembar luaran pada awal dokumen ini. Ada berbagai jenis luaran yang harus dihasilkan minimal satu oleh mahasiswa seperti disebutkan pada lembar luaran.
+
+    Pertama-tama, mahasiswa menjelaskan luaran (\textit{output}) apa yang dijanjikan di akhir periode \textit{capstone}. Bagian ini harus disinkronkan dengan lembar luaran pada awal dokumen ini. Ada berbagai jenis luaran yang harus dihasilkan minimal satu oleh mahasiswa seperti disebutkan pada lembar luaran seperti yang dapat dituliskan pada Tabel \ref{tab:Ch06_Contoh_Luaran}.
+    
+    \begin{longtable}{|L{7.5cm}|L{7.5cm}|}
+        \caption{Contoh Luaran} 
+        \label{tab:Ch06_Contoh_Luaran}
+        \vspace{-0.75em}\\        
+        \hline
+        \multicolumn{1}{|c|}{\textbf{Jenis Luaran}}                                                                     & \multicolumn{1}{c|}{\textbf{Contoh}}                                                                                \\ \hline
+        
+        \textit{Hardware} Digital (fisik)                                                                                        & Alat pendeteksi asap berbasis mikroprosesor                                                                         \\ \hline
+        
+        \textit{Hardware} Analog (fisik)                                                                                         & Alat penghasil frekuensi 1 THz menggunakan rangkaian RLC                                                            \\ \hline
+        
+        \textit{Firmware}/SW di Mikroprosesor/\textit{Development Board}                                                                  & Alat untuk memonitor asap berbasis komputer                                                                         \\ \hline
+        
+        \textit{Software} di PC                                                                                                  & Software untuk mendeteksi asap berbasis Python                                                                      \\ \hline
+        
+        Sistem Informasi                                                                                                & Sistem informasi \textit{capstone} mahasiswa, Sistem informasi manajemen kebakaran                                           \\ \hline
+        Simulasi Lengkap                                                                                                & Simulasi black-out dengan MATLAB, C++ atau Python (bukan dengan \textit{software} jadi misalnya ETAP atau Digisilent)        \\ \hline
+        
+        Prototipe/miniatur \textit{hardware}/\textit{software}/sistem                                                                     & Prototipe lampu lalu lintas cerdas perempatan MM-UGM                                                                \\ \hline
+        
+        Teorema/Teori Baru                                                                                              & Teori kestabilan sistem tenaga terbarukan dengan beban negatif resistif                                             \\ \hline
+        
+        Kebaruan/\textit{novelty} yang lain/perbaikan metode (apabila berupa \textit{capstone} penelitian)                                & Perbaikan faktor daya dengan metode Alpha, Pencarian jarak terpendek pada sensor asap                               \\ \hline
+        
+        Dokumen (Kebijakan, SOP, Lingkungan, Ekonomi, dll)                                                              & SOP teknis perencanaan sistem proteksi, Dokumentasi \textit{black-out} dan analisisnya, Dokumen usulan investasi energi, dll \\ \hline
+        
+        \begin{tabular}[C{7.5cm}]{@{}L{7.5cm}@{}}Lain-lain (sebutkan)\\ Contoh : Simulasi parsial (dengan \textit{software} jadi)\end{tabular} & Contoh : Simulasi trafo dengan Fluent                                                                            \\ \hline
+    \end{longtable}
+
+    Kemudian Anda jelaskan pula target spesifikasi luaran dari \textit{Capstone Project}ini. Target performa yang akan dicapai berdasarkan fungsionalitas sebagai syarat keberhasilan kinerja produk harus dicantumkan (misal : modul kontroller dapat mengurangi \textit{overshoot} hingga dibawah 1\% atau akurasi produk di bawah 0.01\%). Yang perlu ditekankan disini mahasiswa harus menggunakan standar-standar keteknikan (besaran dan satuan, \textit{policy}/aturan, dan lain-lain) yang disepakati oleh organisasi keteknikan misalnya IEEE, PUIL, ACM dan lain-lain. Contoh spesifikasi luaran yang baik adalah seperti pada Tabel \ref{tab:Ch06_Contoh_Spesifikasi_Luaran}.
+    
+    \begin{longtable}{|c|c|c|c|c|}
+        \caption{Contoh Spesifikasi Luaran} 
+        \label{tab:Ch06_Contoh_Spesifikasi_Luaran}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{No} & \textbf{Spesifikasi}  & \textbf{Satuan} & \textbf{Standar} & \textbf{Keterangan} \\ \hline
+        1           & Tegangan Masukan      & Volt (V)        & 95 sampai 220 V  & Lihat Penjelasan A  \\ \hline
+        2           & Tegangan Keluaran     & Volt (V)        & 20 V $\pm$ 0,2\% & Lihat Penjelasan B  \\ \hline
+        3           & Interferensi Magnetis & Watt (W)        & Maksimal 0,1 W   & Lihat Penjelasan C  \\ \hline
+        4           & SNR                   & Decibel (dB)    & Minimum 80 dB    & Lihat Penjelasan D  \\ \hline
+        5           & dan seterusnya        &                 &                  &                     \\ \hline
+    \end{longtable}
+
+\section{Batasan Masalah}
+\label{sec:Batasan_Masalah}
+    
+    Pada bagian ini peserta \textit{capstone} menguraikan lebih lanjut spesifikasi dari rancangan produk di atas. Spesifikasi yang dimaksud di sini adalah spesifikasi yang bersifat fungsional. Tim juga harus mendefinisikan batasan-batasan permasalahan secara lebih terperinci dan konkret. Batasan-batasan ini diperlukan untuk membuat sistem yang dirancang bisa diimplementasikan secara masuk akal dalam jangka waktu, kesediaan sarana dan prasarana, jumlah sumber daya manusia (SDM), biaya yang terbatas, dan lain-lain. 
+
+    Pada bidang TI, peserta \textit{capstone} dapat menjelaskan fasilitas atau fitur apa saja yang disediakan oleh sistem yang dirancang secara lebih detail. Sebagai contoh, sistem informasi keuangan dapat dispesifikasikan untuk memiliki kemampuan untuk melakukan perhitungan biaya atau gaji (\textit{payroll}) berserta laporan (\textit{reporting}). Pada kasus ini, peserta wajib menyebutkan secara detail jenis pelaporan yang ada. Kemudian, perlu juga dijelaskan bagaimana perhitungan tersebut dilakukan, serta \textit{user} apa saja yang dikehendaki terlibat dalam sistem yang dirancang. Di samping itu, peserta wajib mencantumkan apa saja keterbatasan sistem yang dirancang, misalnya fitur apa saja yang tidak dapat atau tidak akan dilakukan atau tidak disediakan pada produk yang akan dikembangkan. 
+
+    Pada bidang TE yang menghasilkan perangkat keras, dapat dijelaskan mengenai fitur fungsional dan karakteristik dari perangkat keras tersebut. Sebagai contoh, misalkan sebuah rancangan robot diharapkan dapat digunakan untuk membantu orang tua yang memiliki keterbatasan. Dalam memenuhi tugas tersebut, robot dapat dispesifikasikan memiliki kriteria tertentu, misalkan, stabil pada kondisi medan yang homogen maupun heterogen (lapangan rumput, aspal, con-block). Selain, itu robot dapat dispesifikasikan memiliki bentuk yang kokoh dan rapi, pengkabelan (\textit{wiring}) tidak berantakan, tertutup dan aman. Perlu disebutkan juga keterbatasan robot tersebut, misalnya hanya membahas robot beroda dan tidak bisa bergerak \textit{omni-directional}, daya yang tersedia maksimal adalah 40 Watt, dan sebagainya. 
+
+    Pada bidang TE yang menghasilkan program simulasi, maka peserta \textit{capstone} dapat menspesifikasikan jenis program yang akan dibuat. Misalkan, sebuah program simulasi yang dibuat untuk menjalankan algoritme dalam rangka menjawab sebuah permasalahan (tentu saja permasalahan yang akan dipecahkan telah dijelaskan terlebih dahulu). Di samping juga batasan-batasan dari algoritme yang akan dirancang. Di samping itu, peserta \textit{capstone} secara umum harus menspesifikasikan skenario yang dipakai dalam proses perancangan perangkat lunak diatas. Pengujian bisa mespesifikasikan metrik/indikator yang akan diuji. Pada bidang STL yang tidak menghasilkan perangkat keras maupun program simulasi lengkap, maka peserta \textit{capstone} wajib menspesifikasikan analisis kebutuhan dan detil permasalahan yang akan dijawab, beserta batasan-batasan yang diprediksi mungkin timbul beserta alasan-alasan yang logis kenapa batasan-batasan tersebut dipilih/ditetapkan.
+
+    
+\section{Detail Rancangan}
+\label{sec:Detail_Rancangan}
+    
+Tuliskan detail rancangan anda untuk menyelesaikan masalah \textit{engineering} yang kompleks di sini. Anda harus mendetailkan rancangan sampai level yang dapat diimplementasikan
