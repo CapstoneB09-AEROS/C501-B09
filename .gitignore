@@ -41,6 +41,10 @@ $RECYCLE.BIN/
 *.vrb
 *.xdv
 *.dvi
+*.synctex(busy)
+
+# Hasil compile laporan (PDF)
+thesis/Main/main.pdf
 
 # =====================================
 # LaTeX Build Directories
