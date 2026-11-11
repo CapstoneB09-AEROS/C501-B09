@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{UGMThesis}
+\ProvidesClass{DTETI_CP_C501}
               [2013/7/16 v0.1
 			  UGM Thesis Class]
 %% Based on Report class	
@@ -45,7 +45,7 @@
 
 %% =================================
 %% Untuk Bahasa
-\RequirePackage[bahasa]{babel}
+\RequirePackage[indonesian]{babel}
 
 %% Untuk Mengganti Gaya Judul Bahasa
 \RequirePackage{titlesec}
@@ -109,9 +109,9 @@
 %% (CHAPTER <No> <\cftchapnumwidth> <Name>)
 %\renewcommand{\cftchapnumwidth}{7em}
 
-\renewcommand\cfttoctitlefont{\vspace{-0.8cm}\large\bfseries\centering\MakeUppercase}
-\renewcommand\cftloftitlefont{\vspace{-0.8cm}\hspace{.1cm}\large\bfseries\centering\MakeUppercase}
-\renewcommand\cftlottitlefont{\vspace{-0.8cm}\hspace{.1cm}\large\bfseries\centering\MakeUppercase}
+\renewcommand\cfttoctitlefont{\vspace{-0.8cm}\large\bfseries\centering}
+\renewcommand\cftloftitlefont{\vspace{-0.8cm}\hspace{.1cm}\large\bfseries\centering}
+\renewcommand\cftlottitlefont{\vspace{-0.8cm}\hspace{.1cm}\large\bfseries\centering}
 
 \dottedcontents{chapter}[1.5cm]{}{1.5cm}{0.3pc}
 \dottedcontents{section}[2.25cm]{}{.75cm}{0.3pc}
@@ -276,7 +276,7 @@
 					{6.}								&
 					{TANGGAL PENERBITAN}				&
 					{:}									&
-					{\protect\foreignlanguage{bahasa}{\today}}  \\
+					{\protect\foreignlanguage{indonesian}{\today}}  \\
 				\hline
 					{7.}								&
 					{DATA MAHASISWA}					&
@@ -361,9 +361,9 @@
 	\end{center} \par
 	
 	% Pengaturan Judul TOC, LOF dan LOT
-    \renewcommand{\contentsname}{{\uppercase{Daftar Isi}}}
-    \renewcommand{\listfigurename}{{\uppercase{Daftar Gambar}}}
-    \renewcommand{\listtablename}{{\uppercase{Daftar Tabel}}}
+    \renewcommand{\contentsname}{DAFTAR ISI}
+    \renewcommand{\listfigurename}{DAFTAR GAMBAR}
+    \renewcommand{\listtablename}{DAFTAR TABEL}
     
     %% Mengganti Nama Chapter untuk Daftar Pustaka
     \renewcommand\bibname{REFERENSI}
