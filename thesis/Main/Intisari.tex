@@ -1,10 +1,11 @@
+\begin{onehalfspace}
+Kualitas udara di dalam kabin kendaraan merupakan faktor yang berpengaruh terhadap kesehatan, keselamatan, dan kenyamanan pengguna kendaraan. Kondisi kabin yang tertutup dalam waktu lama dapat menyebabkan akumulasi gas karbon dioksida (CO\textsubscript{2}) akibat proses respirasi penumpang, sedangkan paparan gas karbon monoksida (CO) dapat berasal dari lingkungan lalu lintas yang padat maupun sumber emisi di sekitar kendaraan. Peningkatan konsentrasi kedua gas tersebut dapat menurunkan kualitas udara kabin, mengurangi konsentrasi pengemudi, menimbulkan gejala kesehatan tertentu, hingga meningkatkan risiko kecelakaan.
 
-Intisari adalah ringkasan dari laporan teknis (C-501) ini secara keseluruhan dengan panjang maksimal adalah 300 kata. Bahasa yang digunakan adalah untuk kalangan yang paham dengan topik ini (\textit{technical readers}) bukan untuk kalangan umum sehingga gunakanlah istilah-istilah teknis yang biasa dipakai di komunitas ilmiah. Intisari harus singkat dan cukup ditulis dalam satu paragraf. Selain itu intisari harus merupakan entitas yang lengkap (jika dibaca intisarinya saja maka pembaca akan paham keseluruhan dari apa yang Anda tulis di \textit{technical report} ini). Biasanya intisari mempunyai beberapa komponen seperti berikut ini:
+Ditawarkan solusi berupa AEROS \textit{Automatic Environmental Response and On-board Safety}, yaitu sistem pemantauan kualitas udara kabin kendaraan yang mampu melakukan deteksi kondisi udara secara \textit{real-time} dan memberikan respons otomatis ketika kualitas udara berada pada kondisi tidak aman. Sistem ini memanfaatkan sensor MQ-7 untuk mengukur konsentrasi karbon monoksida (CO) dan sensor MH-Z19B untuk mengukur konsentrasi karbon dioksida (CO\textsubscript{2}). Data sensor diproses oleh mikrokontroler ESP32 menggunakan metode klasifikasi berbasis ambang batas (\textit{threshold-based classification}) yang membagi kondisi operasional sistem ke dalam dua status utama, yaitu \textbf{AMAN}, \textbf{WASPADA}, dan \textbf{BAHAYA}.
 
-\begin{itemize}
-    \item Permasalahan yang ada di dokumen C-251 secara singkat (1-2 kalimat),
-    \item Analisis permasalahan di dokumen C-251 (1-2 kalimat),
-    \item Rencana solusi yang dilakukan di dokumen C-251 (1-2 kalimat),
-    \item Proses yang sudah dilakukan di dokumen C-501 ini (2-4 kalimat), dan
-    \item Analisis dan kesimpulan (2-3 kalimat).
-\end{itemize}
+AEROS menerapkan mekanisme respons bertingkat pada status \textbf{WASPADA} yang membedakan skenario aktuasi berdasarkan pemicu polusi: pembukaan jendela otomatis menggunakan motor \textit{servo} saat CO\textsubscript{2} tinggi untuk sirkulasi udara segar, atau penutupan jendela disertai notifikasi instruksi AC \textit{recirculation} saat CO tinggi guna mengisolasi kabin dari polusi luar. Sistem ini dilengkapi aktivasi \textit{buzzer} sebagai alarm lokal, notifikasi indikator warna pada aplikasi \textit{mobile} berbasis Flutter, serta penerapan logika pemulihan histeresis berbasis \textit{timer}. Sistem juga memanfaatkan protokol MQTT untuk komunikasi data secara \textit{real-time} dan menyimpan data pengukuran pada basis data awan untuk mendukung pencatatan serta analisis.
+
+Melalui integrasi sensor, komunikasi IoT, aplikasi \textit{mobile}, dan mekanisme aktuasi otomatis, AEROS diharapkan dapat membantu menjaga kualitas udara kabin kendaraan serta meningkatkan keselamatan pengguna kendaraan melalui sistem peringatan dini dan respons otomatis terhadap kondisi udara yang berpotensi membahayakan.
+
+\noindent \textbf{Kata Kunci:} Kualitas Udara Kabin, Karbon Monoksida, Karbon Dioksida, \textit{Internet of Things}, ESP32, MQTT, Monitoring \textit{Real-Time}, Sistem Peringatan Dini, AEROS
+\end{onehalfspace}

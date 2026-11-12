@@ -23,6 +23,64 @@
 \section{Mata Kuliah dan Kemampuan yang Mendukung}
 \label{sec:Mata_Kuliah_dan_Kemampuan_yang_Mendukung}
 
-    % TODO (teman): isi subbab 1.3 sebagai daftar bernomor (nama mata kuliah + 2-3 kalimat kaitannya).
-    % Placeholder di bawah dihapus setelah diisi.
-    \lipsum[4-5]
+Dalam merealisasikan sistem deteksi dan mitigasi gas beracun di dalam kabin kendaraan, proyek Capstone ini mengintegrasikan fondasi ilmiah dan keilmuan teknik yang telah dipelajari melalui mata kuliah berikut:
+
+\begin{enumerate}[label=\alph*.]
+
+    \item \textbf{Fisika Dasar}
+
+    Mata kuliah ini mendasari analisis perilaku gas CO dan CO$_2$ sebagai fluida dalam ruang tertutup. Prinsip perpindahan kalor diaplikasikan untuk menghitung pengaruh perubahan suhu kabin yang ekstrem terhadap laju difusi gas dan akurasi sensor.
+
+    \item \textbf{Statistika}
+
+    \textit{Noise} elektronik dan variasi suhu sekitar merusak stabilitas sinyal. Ada juga efek \textit{cross-sensitivity} terhadap keberadaan gas interferensi. Konsep statistika menopang penentuan ambang batas peringatan yang tahan terhadap berbagai fluktuasi lingkungan tersebut.
+
+    \item \textbf{Sistem Tertanam dan Internet of Things (IoT)}
+
+    Prinsip mikrokontroler membentuk fondasi perangkat keras utama dari keseluruhan arsitektur pemantauan. Perancangan simpul fisik memanfaatkan konfigurasi pin cip ESP32 untuk mengintegrasikan pembacaan sensor menuju jaringan internet nirkabel.
+
+    \item \textbf{Sistem Mikroprosesor}
+
+    Arsitektur internal pemroses menuntut alokasi memori yang ketat dalam menangani banyak aliran data mentah secara bersamaan. Penentuan frekuensi pengambilan sampel gas diatur sedemikian rupa agar cip tetap responsif tanpa mengalami kelebihan beban.
+
+    \item \textbf{Sistem Operasi pada Sistem Tertanam}
+
+    Perangkat harus mengeksekusi banyak tugas kritis secara bersamaan tanpa saling menjegal antrean perintah. Kerangka kerja sistem operasi waktu nyata diterapkan pada mikrokontroler untuk mengatur prioritas eksekusi secara deterministik.
+
+    \item \textbf{Pengukuran dan Instrumentasi}
+
+    Prinsip instrumentasi mendasari strategi kalibrasi perangkat lunak untuk menekan kelemahan bawaan sensor gas berbiaya rendah. Perhitungan batas deviasi dan kompensasi suhu dirancang secara empiris agar peringatan bahaya tetap menyala pada waktu yang tepat.
+
+    \item \textbf{Teknik Digital}
+
+    Sinyal tegangan analog dari sensor diubah menjadi data biner melalui fitur konversi bawaan cip pemroses. Pemahaman tentang resolusi bit menentukan tingkat kepekaan deteksi kadar gas beracun pada rentang puluhan bagian per juta.
+
+    \item \textbf{Jaringan dan Komunikasi Data}
+
+    Arsitektur penyaluran pesan dari sensor menuju perangkat beroperasi mengikuti hierarki lapisan jaringan murni. Paradigma publikasi dan berlangganan diterapkan lewat standar protokol pertukaran pesan ringan untuk menjamin kelancaran lalu lintas data.
+
+    \item \textbf{Sistem Komunikasi Nirkabel}
+
+    Teori modulasi gelombang membenarkan pemilihan protokol jarak dekat hemat energi sebagai jembatan lalu lintas data dalam kabin. Kemampuan memancarkan paket informasi tanpa status koneksi permanen sangat menghemat daya operasi perangkat keras.
+
+    \item \textbf{Teknik Pengolahan Isyarat Digital}
+
+    Langkah penyaringan digital diterapkan pada baris kode untuk menghaluskan fluktuasi tajam akibat \textit{noise} elektromagnetik. Sinyal bersih hasil saringan ini mencegah perangkat mengambil keputusan aktuasi berdasarkan lonjakan angka sesaat.
+
+    \item \textbf{Teknik Kendali}
+
+    Logika pergerakan komponen mekanis menggunakan prinsip pengontrol hidup-mati dengan batas pita mati. Konsep histeresis membatasi motor jendela agar tidak bergerak membuka dan menutup secara liar saat kadar gas berada di ambang batas.
+
+    \item \textbf{Pemrograman Mobile}
+
+    Kemampuan ini digunakan untuk membangun aplikasi yang dapat menerima, menampilkan, dan mengolah data dari sensor (misalnya sensor CO, suhu, atau kelembapan) yang dikirim melalui jaringan nirkabel.
+
+    \item \textbf{Pemrograman Dasar}
+
+    Mata kuliah ini menjadi pondasi penting pemrograman baik untuk mikrokontroler maupun untuk \textit{back-end} dan \textit{front-end} website. Oleh karena itu, pemahaman dasar mengenai pemrograman sangat dibutuhkan untuk sistem monitoring.
+
+    \item \textbf{Interaksi Manusia dan Komputer}
+
+    Mata kuliah ini mendasari perancangan antarmuka (\textit{user interface}) aplikasi seluler yang intuitif agar penumpang dapat dengan cepat merespons peringatan darurat tanpa kebingungan.
+
+\end{enumerate}
