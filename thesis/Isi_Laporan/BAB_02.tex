@@ -1,40 +1,230 @@
-Uraikan semua dasar teori pendukung tugas akhir ini dengan terstruktur dan sistematis. Terstruktur dan sistematis artinya semua teori yang diperlukan dapat disajikan dengan urutan yang baik sehingga tidak terjadi perulangan di belakang. Misalnya teori dan semua variabel setelah dideklarasikan, maka akan dipakai seterusnya tanpa mengulangi definisi teori dan variabel tersebut kecuali jika secara spesifik diperlukan. 
+% TODO: subbab 2.3 sampai 2.9 masih placeholder (lorem ipsum). Isi sesuai kerangka-c501.md; 2.3 dan 2.8 dikerjakan bersama teman backend dan software.
 
-Walaupun berupa dasar teori, tim \textit{capstone} \uline{harus menuliskannya sendiri} dan \textbf{\uline{dilarang keras} \uline{untuk melakukan \textit{copy and paste}}} serta \uline{wajib bebas dari plagiarisme}. Menyunting diperbolehkan selama memenuhi kriteria akademis dengan memberikan referensi yang tepat. Mahasiswa diharapkan untuk bisa belajar tentang etika akademik yang berkaitan dengan cara menyunting untuk menghindari praktek plagiarisme kepada dosen pembimbing \textit{capstone} masing-masing.
+\section{Kualitas Udara Kabin dan Batas Paparan}
+\label{sec:Kualitas_Udara_Kabin}
 
-Sebagai contoh, berikut ini adalah dasar teori yang menjelaskan mengenai interpretasi geometris dari konsep \textit{eigenvalue} dan \textit{eigenvector}.
+    Kualitas udara dalam ruang (\textit{indoor air quality}, IAQ) dipengaruhi banyak zat sekaligus, misalnya gas dan partikel dari berbagai sumber \cite{ashrae_co2}. Kabin kendaraan adalah ruang kecil yang tertutup saat jendela dinaikkan. Dua gas yang dipantau pada proyek ini adalah karbon monoksida (CO) dan karbon dioksida (CO\textsubscript{2}).
 
-\section{Intepretasi Geometris dari \textit{Eigenvalues} dan \textit{Eigenvectors}}
-\label{sec:Interpretasi_Geometris_Eigenvalue_Eigenvector}
+    \subsection{Karbon Monoksida (CO)}
 
-    Dalam ilmu Aljabar Linear, ketika sebuah matriks $A$ dikalikan dengan sebuah vektor $v$, makna dari proses perkalian tersebut adalah matriks $A$ tersebut mentransformasikan vektor $v$ menjadi sebuah vektor baru $w = T(v) = Av$. Ide dari transformasi $T(v)$ tersebut sama dengan ide dari fungsi $y = f(x)$, yang mana akan menghasilkan sebuah nilai baru $y$ ketika kita memasukkan sebuah nilai tertentu $x$ ke dalam fungsi tersebut. 
-    
+    CO dapat masuk ke kabin dari gas buang kendaraan lain. Studi di Auckland memakai tiga kendaraan dengan pengaturan ventilasi yang berbeda \cite{dirks2018}. Puncak CO sekitar 170~ppm terjadi pada pengaturan udara luar saat kendaraan mengikuti kendaraan tua yang berasap dan tidak terawat.
+
+    Kadar CO ditulis dalam ppm (bagian per sejuta volume) atau dalam mg/m\textsuperscript{3}. NIOSH memakai faktor konversi 1~ppm sekitar 1,15~mg/m\textsuperscript{3} \cite{niosh_co}. WHO membatasi kadar CO dalam ruang hingga 35~mg/m\textsuperscript{3} (sekitar 30~ppm) untuk paparan satu jam \cite{who_iaq}.
+
+    \subsection{Karbon Dioksida (CO\texorpdfstring{\textsubscript{2}}{2})}
+
+    CO\textsubscript{2} dihasilkan oleh napas penumpang. Kadarnya naik saat kabin tertutup dan pertukaran udaranya kecil (Subbab~\ref{sec:Model_Kesetimbangan_Gas}). Pengukuran pada 51 mobil ber-AC di Hong Kong mencatat 96\% mobil melewati 1.000~ppm saat berkendara \cite{barnes2018}.
+
+    % Results dan keterbatasan Satish dicek langsung ke artikel PMC3548274 (13 Nov 2026): 22 peserta (18 berusia 18--29 tahun, mayoritas mahasiswa),
+    % 2,5 jam per kadar, skor sebagian besar skala keputusan lebih rendah pada 2.500 ppm. Penulis menyatakan temuan perlu direplikasi.
+    Satish dkk. menguji 22 peserta, yang sebagian besar mahasiswa, selama 2,5 jam pada kadar 600, 1.000, dan 2.500~ppm. Skor pengambilan keputusan pada sebagian besar skala lebih rendah di 2.500~ppm \cite{satish2012}. Penulisnya menyatakan bahwa temuan ini sulit digeneralisasi dan perlu direplikasi \cite{satish2012}. Tinjauan ASHRAE menilai bukti pengaruh langsung CO\textsubscript{2} pada kadar umum dalam ruang tidak konsisten \cite{ashrae_co2}.
+
+    \subsection{Relevansi CO dan CO\texorpdfstring{\textsubscript{2}}{2} terhadap Kualitas Udara Kabin}
+
+    CO dan CO\textsubscript{2} menggambarkan dua hal yang berbeda. CO\textsubscript{2} dihasilkan penumpang, sehingga kadarnya menunjukkan kurangnya udara segar yang masuk dan bukan bersihnya udara. ASHRAE menyebut CO\textsubscript{2} sebagai indikator ventilasi, bukan indikator IAQ secara menyeluruh. Alasannya, polutan dari bahan bangunan atau dari luar tidak berkorelasi dengan CO\textsubscript{2} \cite{ashrae_co2}.
+
+    Napas tidak menghasilkan CO, sehingga kadar CO tidak mengikuti jumlah penumpang. CO diukur sendiri karena gas ini memiliki batas paparan tersendiri (Tabel~\ref{tab:Ch02_Batas_Paparan}). Proyek ini hanya mengukur CO dan CO\textsubscript{2}, sehingga tidak dapat menilai IAQ secara luas. Partikel, gas lain, suhu, dan kelembapan tidak diukur secara terpisah. Istilah kualitas udara kabin pada laporan ini karena itu hanya berarti kadar CO dan CO\textsubscript{2}. CO\textsubscript{2} menjadi penanda ventilasi kabin dan CO menjadi penanda gas buang yang masuk.
+
+    \subsection{Batas Paparan}
+
+    Beberapa lembaga menetapkan batas paparan CO dan CO\textsubscript{2}. Tabel~\ref{tab:Ch02_Batas_Paparan} merangkum batas yang dipakai sebagai acuan pada proyek ini.
+
+    \begin{longtable}{|L{6.0cm}|L{9.0cm}|}
+        \caption{Batas Paparan CO dan CO\textsubscript{2}}
+        \label{tab:Ch02_Batas_Paparan}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Acuan} & \textbf{Nilai} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Acuan} & \textbf{Nilai} \\ \hline
+        \endhead
+        \multicolumn{2}{|l|}{\textbf{Karbon monoksida (CO)}} \\ \hline
+        NIOSH, REL \cite{niosh_co}      & 35~ppm (40~mg/m\textsuperscript{3}), TWA sampai 10 jam \\ \hline
+        NIOSH, plafon (C) \cite{niosh_co} & 200~ppm (229~mg/m\textsuperscript{3}) \\ \hline
+        NIOSH, IDLH \cite{niosh_co}     & 1.200~ppm \\ \hline
+        OSHA, PEL \cite{osha_co}        & 50~ppm (55~mg/m\textsuperscript{3}), TWA 8 jam \\ \hline
+        WHO, 15 menit \cite{who_iaq}    & 100~mg/m\textsuperscript{3} ($\approx$ 87~ppm) \\ \hline
+        WHO, 1 jam \cite{who_iaq}       & 35~mg/m\textsuperscript{3} ($\approx$ 30~ppm) \\ \hline
+        WHO, 8 jam \cite{who_iaq}       & 10~mg/m\textsuperscript{3} ($\approx$ 9~ppm) \\ \hline
+        \multicolumn{2}{|l|}{\textbf{Karbon dioksida (CO\textsubscript{2})}} \\ \hline
+        NIOSH, REL \cite{niosh_co2}     & 5.000~ppm, TWA \\ \hline
+        OSHA, PEL \cite{niosh_co2, ashrae_co2} & 5.000~ppm, TWA \\ \hline
+        ASHRAE \cite{ashrae_co2}        & Tidak menetapkan batas CO\textsubscript{2} dalam ruang. Angka 1.000~ppm bukan batas ASHRAE. \\ \hline
+    \end{longtable}
+
+    REL adalah \textit{recommended exposure limit}, yaitu batas yang direkomendasikan NIOSH. PEL adalah \textit{permissible exposure limit}, yaitu batas yang diizinkan OSHA. IDLH adalah kadar yang langsung membahayakan jiwa atau kesehatan. TWA (\textit{time-weighted average}) adalah rata-rata berbobot waktu. Nilai ppm pada baris WHO dihitung dari mg/m\textsuperscript{3} dengan faktor konversi di atas.
+
+    Semua batas pada Tabel~\ref{tab:Ch02_Batas_Paparan} dibuat untuk tempat kerja atau ruang dalam gedung, bukan untuk kabin kendaraan. Studi di Hong Kong juga menyebut belum ada pedoman kadar polutan di kabin \cite{barnes2018}. Karena itu proyek ini tidak mengacu pada satu lembaga saja dan tidak mengklaim memenuhi standar tertentu. Setiap ambang peringatan dipilih dari batas yang sesuai dengan tujuannya, dan dasarnya dijelaskan pada Bab~4.
+
+    % Peraturan Indonesia (Permenaker 5/2018, Permenkes 48/2016) sengaja tidak dimasukkan karena angka batasnya belum terverifikasi
+    % (PDF resmi berupa gambar pindai). Tambahkan hanya bila tabel resminya sudah dibaca langsung dan memuat batas CO dan CO2.
+    % Bibitem permenaker5 dan permenkes48 dihapus dari Referensi.tex; data lengkapnya ada di daftar-pustaka.md [25] dan [26].
+
+\section{Model Kesetimbangan Massa Gas dalam Kabin}
+\label{sec:Model_Kesetimbangan_Gas}
+
+    % Sumber: C-251 Bab 4 (PDF "[v1] C251 B-09.pdf"). Nomor persamaan di PDF: 4.1 (neraca), 4.2 (N), 4.2a (ringkas), 4.3 (sumber berhenti),
+    % 4.4 (waktu), 4.5 (kesetimbangan, sumber berkelanjutan), 4.6 (P untuk CO2), 4.7 (kesetimbangan CO2).
+    % Nomor di kerangka-c501.md dan di docstring pemodelan_bab4_simulasi.py (4.2, 4.3, 4.4a) berbeda dari PDF.
+    % Sengaja tidak dimasukkan ke Bab 2 (pindahkan ke Bab 4, bagian implementasi): C-251 4.1.7 (adaptasi untuk estimasi CO2, hanya bentuk P yang dipakai di sini)
+    % dan 4.1.8 (adaptasi untuk CO dan implikasinya pada logika status WASPADA).
+    % TODO: bagian CO bersifat teori. Validasi CO dengan data uji tidak mungkin tanpa CO acuan (model-vs-uji.md bagian 5); sesuaikan Bab 5 bila prototipe CO berubah.
+
+    Model kesetimbangan massa menggambarkan perubahan kadar gas di dalam kabin terhadap waktu. Perubahan itu dipengaruhi oleh sumber gas di dalam kabin dan pertukaran udara dengan luar kabin. Model ini berlaku untuk CO maupun CO\textsubscript{2}.
+
+    \subsection{Model Satu Zona Tercampur Sempurna}
+
+    Model ini memperlakukan kabin sebagai satu volume kontrol dengan udara tercampur merata (\textit{single-zone well-mixed}). Satu nilai kadar gas $C$ lalu mewakili seluruh kabin. Asumsi yang sama dipakai pada metode peluruhan untuk mengukur laju pertukaran udara \cite{ashrae_co2}. Model diturunkan dari hukum kekekalan massa, yaitu laju perubahan massa gas di dalam kabin sama dengan laju massa yang masuk dikurangi laju massa yang keluar.
+
+    Gas masuk lewat dua jalur: sumber di dalam kabin dengan debit $Q_{\text{sumber}}$ dan kadar $C_{\text{sumber}}$, serta udara luar dengan debit $Q_{\text{inf}}$ dan kadar $C_{\text{luar}}$. Gas keluar bersama udara kabin. Volume kabin $V$ dianggap tetap dan $Q_{\text{sumber}}$ dianggap jauh lebih kecil daripada $Q_{\text{inf}}$, sehingga debit udara keluar sama dengan $Q_{\text{inf}}$. Karena $V$ tetap, laju perubahan massa gas sebanding dengan $V\,dC/dt$. Neraca massanya adalah
+    \begin{equation}
+        \label{eqn:Ch02_Neraca}
+        V\,\frac{dC}{dt} = Q_{\text{sumber}}\,C_{\text{sumber}} + Q_{\text{inf}}\,C_{\text{luar}} - Q_{\text{inf}}\,C
+    \end{equation}
+
+    \subsection{Laju Pertukaran Udara dan Suku Sumber}
+
+    Laju pertukaran udara (\textit{air changes per hour}, ACH) didefinisikan sebagai
+    \begin{equation}
+        \label{eqn:Ch02_N}
+        N = \frac{Q_{\text{inf}}}{V}
+    \end{equation}
+    dalam satuan per jam. Besaran ini menyatakan berapa kali seluruh udara kabin diganti dalam satu jam. Dengan $N$ dan laju penambahan oleh sumber $P = Q_{\text{sumber}}\,C_{\text{sumber}}/V$ (ppm per jam), Persamaan~\ref{eqn:Ch02_Neraca} menjadi
+    \begin{equation}
+        \label{eqn:Ch02_Model_Gas}
+        \frac{dC}{dt} = P - N\left(C - C_{\text{luar}}\right)
+    \end{equation}
+    Suku $P$ menaikkan kadar dengan laju tetap, sedangkan suku $N\left(C - C_{\text{luar}}\right)$ menggerakkan kadar kabin menuju kadar udara luar.
+
+    Bentuk $P$ berbeda untuk tiap gas. Sumber CO\textsubscript{2} adalah napas penumpang:
+    \begin{equation}
+        \label{eqn:Ch02_P_CO2}
+        P = \frac{n\,G\,10^{6}}{V}
+    \end{equation}
+    dengan $n$ jumlah penumpang dan $G$ volume CO\textsubscript{2} yang dihembuskan satu orang per jam (L/jam). Faktor $10^{6}$ mengubah perbandingan volume menjadi ppm. Sumber CO berupa sumber internal atau kebocoran dengan bentuk $P$ sebelumnya. CO dari luar kabin tidak masuk lewat $P$ melainkan lewat $C_{\text{luar}}$.
+
+    \subsection{Penyelesaian untuk Sumber Berhenti}
+
+    Bila sumber berhenti ($P = 0$), Persamaan~\ref{eqn:Ch02_Model_Gas} memiliki penyelesaian
+    \begin{equation}
+        \label{eqn:Ch02_Berhenti}
+        C(t) = C_{\text{luar}} + \left(C_{0} - C_{\text{luar}}\right)e^{-Nt}
+    \end{equation}
+    dengan $C_{0}$ kadar awal dan $t$ waktu (jam). Kadar bergerak menuju kadar luar dari kedua arah. Kadar turun bila $C_{\text{luar}} < C_{0}$ dan naik bila $C_{\text{luar}} > C_{0}$. Jadi pembukaan jendela mengencerkan gas bila udara luar lebih bersih, tetapi justru memasukkan gas bila udara luar lebih tercemar.
+
+    Waktu yang dibutuhkan kadar untuk mencapai target $C_{\text{target}}$ diperoleh dengan membalik Persamaan~\ref{eqn:Ch02_Berhenti}:
+    \begin{equation}
+        \label{eqn:Ch02_Waktu_Target}
+        t = \frac{1}{N}\ln\frac{C_{0} - C_{\text{luar}}}{C_{\text{target}} - C_{\text{luar}}}
+    \end{equation}
+    Persamaan ini hanya berlaku bila $C_{\text{target}}$ berada di antara $C_{0}$ dan $C_{\text{luar}}$. Bila $C(t)$ terukur pada waktu $t$, persamaan yang sama dapat disusun ulang untuk memperkirakan laju pertukaran udara dengan metode peluruhan \cite{ashrae_co2}:
+    \begin{equation}
+        \label{eqn:Ch02_Estimasi_N}
+        N = \frac{1}{t}\ln\frac{C_{0} - C_{\text{luar}}}{C(t) - C_{\text{luar}}}
+    \end{equation}
+
+    \subsection{Penyelesaian untuk Sumber Berkelanjutan}
+
+    Bila sumber terus ada ($P > 0$), kadar menuju kadar kesetimbangan $C_{\infty}$ yang diperoleh dari $dC/dt = 0$:
+    \begin{equation}
+        \label{eqn:Ch02_Kesetimbangan}
+        C_{\infty} = C_{\text{luar}} + \frac{P}{N}
+    \end{equation}
+    Kadar tidak pernah turun sampai $C_{\text{luar}}$. Nilai $C_{\infty}$ makin tinggi untuk sumber yang makin kuat atau $N$ yang makin kecil. Jendela terbuka memperbesar $N$ sehingga $C_{\infty}$ mendekati $C_{\text{luar}}$. Pada CO\textsubscript{2}, $C_{\infty}$ ditentukan oleh jumlah penumpang, volume kabin, dan $N$.
+
+    Penyelesaian lengkapnya berbentuk
+    \begin{equation}
+        \label{eqn:Ch02_Penyelesaian_Umum}
+        C(t) = C_{\infty} + \left(C_{0} - C_{\infty}\right)e^{-Nt}
+    \end{equation}
+    Waktu mencapai target memakai Persamaan~\ref{eqn:Ch02_Waktu_Target} dengan $C_{\text{luar}}$ diganti $C_{\infty}$. Persamaan itu berlaku bila $C_{\text{target}}$ berada di antara $C_{0}$ dan $C_{\infty}$.
+
+    Model ini dipakai pada Bab~4 untuk memperkirakan lama kadar CO\textsubscript{2} dan CO mencapai ambang serta lama pemulihannya. Perhitungannya memakai skrip pemodelan tim \cite{skrip_pemodelan}, dan hasilnya dibandingkan dengan data uji pada Bab~5.
+
+\section{Internet of Things}
+\label{sec:Internet_of_Things}
+
+    % TODO: placeholder. 2.3.1 MQTT (publish/subscribe, broker, QoS, TLS, HMAC-SHA256) dan 2.3.2 HTTP dan REST. Kerjakan bersama teman backend.
+    \lipsum[1]
+
+\section{Development Board: ESP32}
+\label{sec:Development_Board_ESP32}
+
+    % TODO: placeholder. mikrokontroler, Wi-Fi, ADC 12-bit, UART, I2C, GPIO; versi DevKitC V4; gambar papan dengan sumber.
+    \lipsum[1]
+
+\section{Sensor}
+\label{sec:Sensor}
+
+    % Sumber: parameter-dan-sumber.md (bagian A dan B), batasan-sistem.md, datasheet MiCS-5524 rev 6 [1], manual MH-Z19C v1.2 [2], Adafruit [4], model koreksi MOX [6].
+    % Tidak dikutip: Liu dan Tang [7] (volume dan halaman belum dicek, belum dibaca langsung).
+    % TODO: (1) gambar masih placeholder; ambil foto modul sendiri atau gambar dari sumber dengan izin, lalu ganti kotak di bawah.
+    % (2) MQ-7 dan MH-Z19B sengaja tidak ditulis: pengembangan memakai MiCS-5524 dan MH-Z19C.
+    % (3) Cek stiker modul MH-Z19C untuk memastikan varian rentang 5.000 ppm (peringatan-dan-ambang.md A6 no. 5).
+
+    \subsection{Sensor Gas Semikonduktor (MOX)}
+    \label{sec:Sensor_MOX}
+
+    Sensor gas semikonduktor oksida logam (\textit{metal oxide semiconductor}, MOX) memiliki lapisan yang hambatannya ($R_s$) turun saat terkena gas pereduksi seperti CO \cite{mics5524}. Elemen pemanas di dalam sensor menjaga lapisan itu pada suhu kerja \cite{mics5524}.
+
+    Hambatan $R_s$ dibaca lewat pembagi tegangan dengan resistor beban $R_L$. Bila $V_{CC}$ adalah tegangan catu dan $V_{out}$ tegangan pada $R_L$, maka
+    \begin{equation}
+        \label{eqn:Ch02_Rs}
+        R_s = R_L\,\frac{V_{CC} - V_{out}}{V_{out}}
+    \end{equation}
+    Datasheet menyatakan kadar gas lewat rasio $R_s/R_0$, dengan $R_0$ hambatan sensor di udara bersih \cite{mics5524}. Kadar $c$ (ppm) dihitung dari rasio itu dengan hubungan pangkat
+    \begin{equation}
+        \label{eqn:Ch02_Pangkat}
+        c = A\left(\frac{R_s}{R_0}\right)^{B}
+    \end{equation}
+    dengan $A$ dan $B$ konstanta dari kurva pada datasheet ($B$ negatif).
+
+    Sensor MOX memiliki tiga keterbatasan. Pertama, sensor tidak selektif karena gas pereduksi lain seperti etanol, hidrogen, dan amonia ikut mengubah $R_s$ \cite{mics5524, adafruit_mics}. Kedua, $R_s$ bergeser terhadap waktu (\textit{drift}) serta dipengaruhi suhu dan kelembapan \cite{mox_drift}. Ketiga, kurva datasheet hanya berlaku pada 25~$^{\circ}$C dan 50\% kelembapan relatif \cite{mics5524}.
+
+    MiCS-5524 adalah sensor MOX untuk CO, etanol, hidrogen, amonia, metana, propana, dan isobutana dengan rentang CO 1--1.000~ppm \cite{mics5524}. Pemanasnya bertegangan 2,4~V (76~mW) dengan catu 4,9--5,1~V, dan $R_0$ berkisar 100--1.500~k$\Omega$ antarunit \cite{mics5524}. Datasheet tidak memuat waktu respons. Modul yang dipakai berkaki tiga, yaitu 5~V, GND, dan keluaran analog (Gambar~\ref{fig:Ch02_MiCS5524}).
+
     \begin{figure}[h!]
         \centering
-        \includegraphics[scale=1.0]{Ch02_Vector_Transformation.pdf}
-        \caption{Efek dari 3 Matriks Transformasi yang Berbeda terhadap Vektor $v$ (Biru)}
-        \label{fig:Ch02_Vector_Transformation}
+        \fbox{\parbox[c][3cm][c]{6cm}{\centering\textit{Gambar menyusul}}}
+        \caption{Modul sensor MiCS-5524}
+        \label{fig:Ch02_MiCS5524}
     \end{figure}
-        
-    Macam dari matriks transformasi $A$ tersebut sangatlah banyak, antara lain :
-    \begin{equation}
-    	\label{eqn:Ch02_Transformation_Matrix}
-    	\begin{split}
-    		A_1 =
-    		\begin{bmatrix}
-    			2 & 0 \\ 0 & 3
-    		\end{bmatrix}
-    		\quad \text{;} \quad
-    		A_2 =
-    		\begin{bmatrix}
-    			-1 & 0 \\ 0 & 1
-    		\end{bmatrix}
-    		\quad \text{;} \quad
-    		A_3 =
-    		\begin{bmatrix}
-    			0 & -1 \\ 1 & 0
-    		\end{bmatrix}
-    	\end{split}
-    \end{equation}
-    Representasi grafis dari masing-masing matriks transformasi tersebut dapat dilihat pada Gambar \ref{fig:Ch02_Vector_Transformation}. Seperti yang ditunjukkan pada Gambar \ref{fig:Ch02_Vector_Transformation}(a), matriks transformasi $A_1$ merupakan sebuah matriks \textit{scaling}, yang mengubah panjang komponen sumbu $x$ dari vektor $v$ menjadi 2 kalinya, dan panjang komponen sumbu $y$ dari vektor $v$ menjadi 3 kalinya. Sedangkan untuk matriks transformasi $A_2$, matriks ini digunakan untuk mencerminkan vektor $v$ terhadap sumbu $y$ seperti yang ditunjukkan oleh Gambar \ref{fig:Ch02_Vector_Transformation}(b). Terakhir, untuk matriks transformasi $A_3$ merupakan matriks rotasi, yang merotasi vektor $v$ sejauh $90^o$ dengan arah berlawanan dengan arah jarum jam seperti yang ditunjukkan oleh Gambar \ref{fig:Ch02_Vector_Transformation}(c).
-    
+
+    \subsection{Sensor CO\texorpdfstring{\textsubscript{2}}{2} Inframerah Nondispersif (NDIR)}
+    \label{sec:Sensor_NDIR}
+
+    Sensor inframerah nondispersif (\textit{non-dispersive infrared}, NDIR) mengukur CO\textsubscript{2} dari penyerapan cahaya inframerah. Makin tinggi kadar CO\textsubscript{2}, makin besar cahaya yang diserap \cite{mhz19c}.
+
+    MH-Z19C adalah modul NDIR yang mengirim kadar CO\textsubscript{2} dalam ppm lewat UART 9600 baud pada level 3,3~V \cite{mhz19c}. Varian 5.000~ppm memiliki rentang 400--5.000~ppm dengan akurasi $\pm$(50~ppm + 5\% pembacaan). Waktu respons T90, yaitu waktu mencapai 90\% perubahan kadar, kurang dari 120 detik dan pemanasan awalnya 1 menit \cite{mhz19c}. Kalibrasi otomatis (\textit{automatic baseline correction}, ABC) berjalan tiap 24 jam dengan titik nol 400~ppm. Fitur ini kurang cocok untuk ruang yang jarang terkena udara luar \cite{mhz19c} (Gambar~\ref{fig:Ch02_MHZ19C}).
+
+    \begin{figure}[h!]
+        \centering
+        \fbox{\parbox[c][3cm][c]{6cm}{\centering\textit{Gambar menyusul}}}
+        \caption{Modul sensor MH-Z19C}
+        \label{fig:Ch02_MHZ19C}
+    \end{figure}
+
+\section{Komponen Antarmuka dan Aktuator}
+\label{sec:Komponen_Antarmuka_Aktuator}
+
+    % TODO: placeholder. 2.6.1 ADS1115; 2.6.2 LCD I2C 16x2 dan buzzer aktif; 2.6.3 relay dan penggerak jendela. Tiap komponen satu gambar.
+    \lipsum[1]
+
+\section{Sumber Energi DC}
+\label{sec:Sumber_Energi_DC}
+
+    % TODO: placeholder. catu mobil 12 V, buck converter ke 5 V, adaptor USB; pentingnya catu 5 V stabil untuk sensor MOX.
+    \lipsum[1]
+
+\section{Sistem Informasi}
+\label{sec:Sistem_Informasi}
+
+    % TODO: placeholder. Supabase (PostgreSQL, REST), worker MQTT, aplikasi Flutter. Ditulis teman backend dan software.
+    \lipsum[1]
+
+\section{Bahasa Pemrograman}
+\label{sec:Bahasa_Pemrograman}
+
+    % TODO: placeholder. C/C++ (Arduino framework dan PlatformIO), JavaScript (worker Node.js), Dart (Flutter; cek dengan teman software).
+    \lipsum[1]
