@@ -156,6 +156,40 @@
 \newcommand\@MHSProdiKonsentrasi{\@latex@error{Data "Mahasiswa" belum lengkap}\@ehc}
 \newcommand\@MHSEmail{\@latex@error{Data "Mahasiswa" belum lengkap}\@ehc}
 
+%% Data Anggota Kelompok (indeks 1-3): \Anggota{indeks}{Nama}{NIM}{Prodi}{Email}
+\newcommand\Anggota[5]{%
+\expandafter\def\csname @AngNama#1\endcsname{#2}%
+\expandafter\def\csname @AngNIM#1\endcsname{#3}%
+\expandafter\def\csname @AngProdi#1\endcsname{#4}%
+\expandafter\def\csname @AngEmail#1\endcsname{#5}}
+
+%% Teks "PROGRAM STUDI" pada halaman judul (bawaan: prodi ketua kelompok)
+\newcommand\ProdiJudul[1]{\renewcommand\@ProdiJudulText{#1}}
+\newcommand\@ProdiJudulText{\@MHSProdiKonsentrasi}
+
+%% Satu blok data mahasiswa pada halaman pengesahan: nomor, judul, nama, NIM, prodi, email
+\newcommand\@barisMhs[6]{%
+	{#1.}								&
+	{#2}								&
+	{ }									&
+	{\hspace{7.0cm} Tanda Tangan :}		\\
+	{ }									&
+	{a. Nama Lengkap}					&
+	{:}									&
+	{#3}								\\
+	{ }									&
+	{b. NIM}							&
+	{:}									&
+	{#4}								\\
+	{ }									&
+	{c. Prodi}							&
+	{:}									&
+	{#5}								\\
+	{ }									&
+	{d. Email}							&
+	{:}									&
+	{#6}								\\}
+
 %% Data Dosen Pembimbing 1
 \newcommand\DPA[2]{\renewcommand\@DPANama{#1}
 \renewcommand\@DPANIP{#2}}
@@ -200,10 +234,10 @@
 		{\Large {\MakeUppercase{\textbf{\@judul}}} \par}%
 		\vskip 5mm
 		{\Large {\textbf{DOKUMEN C-501}} \par}%
-		\vskip 20mm%
+		\vskip 8mm%
 		
-		\includegraphics[width=85mm]{Logo_UGM.pdf}
-		\vskip 15mm%
+		\includegraphics[width=60mm]{Logo_UGM.pdf}
+		\vskip 8mm%
 		
 		\singlespacing
 		{\large {\textbf{Disusun Oleh :}} \par}%
@@ -211,17 +245,24 @@
 		
 		\begin{table}[!ht]
 			\begin{center}
+			\renewcommand{\arraystretch}{1.25}
 			\begin{tabular}{l C{1cm} l}
 				{\large {\textbf{\@MHSNama}} }	&	{}	&
 				{\large {\textbf{\@MHSNIM}} }		\\
+				{\large {\textbf{\csname @AngNama1\endcsname}} }	&	{}	&
+				{\large {\textbf{\csname @AngNIM1\endcsname}} }		\\
+				{\large {\textbf{\csname @AngNama2\endcsname}} }	&	{}	&
+				{\large {\textbf{\csname @AngNIM2\endcsname}} }		\\
+				{\large {\textbf{\csname @AngNama3\endcsname}} }	&	{}	&
+				{\large {\textbf{\csname @AngNIM3\endcsname}} }		\\
 			\end{tabular}
 			\end{center}
 		\end{table}
-		\vskip 25mm%
+		\vskip 10mm%
 		
 		\onehalfspacing
 		{\large {\textbf{DOKUMENTASI SKRIPSI \textit{CAPSTONE PROJECT}}} \par}%
-		{\large {\textbf{PROGRAM STUDI \MakeUppercase{\@MHSProdiKonsentrasi}}} \par}%
+		{\large {\textbf{PROGRAM STUDI \MakeUppercase{\@ProdiJudulText}}} \par}%
 		{\large {\textbf{DEPARTEMEN TEKNIK ELEKTRO DAN TEKNOLOGI INFORMASI}} \par}%
 		{\large {\textbf{FAKULTAS TEKNIK UNIVERSITAS GADJAH MADA}} \par}%
 		{\large {\textbf{\number\year}}}%
@@ -240,7 +281,7 @@
     		\begin{table}[!ht]
 			\begin{center}
 			\setlength{\tabcolsep}{2pt}	% Control the Horizontal Cell Margin
-			\setlength{\extrarowheight}{1.5mm}
+			\setlength{\extrarowheight}{0.8mm}
 			\begin{tabular}{|C{0.6cm} L{5.0cm} C{0.2cm} p{10.0cm}|}
 				\hline
 					{1.}								&
@@ -278,33 +319,16 @@
 					{:}									&
 					{\protect\foreignlanguage{indonesian}{\today}}  \\
 				\hline
-					{7.}								&
-					{DATA MAHASISWA}					&
-					{ }									&
-					{\hspace{7.0cm} Tanda Tangan :}		\\
-					
-					{ }									&
-					{a. Nama Lengkap}					&
-					{:}									&
-					{\@MHSNama}						\\
-					
-					{ }									&
-					{b. NIM}							&
-					{:}									&
-					{\@MHSNIM}						\\
-					
-					{ }									&
-					{c. Prodi}				&
-					{:}									&
-					{\@MHSProdiKonsentrasi}			\\
-					
-					{ }									&
-					{d. Email}							&
-					{:}									&
-					{\@MHSEmail}						\\
+					\@barisMhs{7}{KETUA KELOMPOK}{\@MHSNama}{\@MHSNIM}{\@MHSProdiKonsentrasi}{\@MHSEmail}
 				\hline
-					{8.}								&
-					{DOSEN PEMBIMBING I}				&
+					\@barisMhs{8}{ANGGOTA 1}{\csname @AngNama1\endcsname}{\csname @AngNIM1\endcsname}{\csname @AngProdi1\endcsname}{\csname @AngEmail1\endcsname}
+				\hline
+					\@barisMhs{9}{ANGGOTA 2}{\csname @AngNama2\endcsname}{\csname @AngNIM2\endcsname}{\csname @AngProdi2\endcsname}{\csname @AngEmail2\endcsname}
+				\hline
+					\@barisMhs{10}{ANGGOTA 3}{\csname @AngNama3\endcsname}{\csname @AngNIM3\endcsname}{\csname @AngProdi3\endcsname}{\csname @AngEmail3\endcsname}
+				\hline
+					{11.}								&
+					{DOSEN PEMBIMBING}					&
 					{ }									&
 					{\hspace{7.0cm} Tanda Tangan :}		\\
 					
@@ -318,27 +342,12 @@
 					{:}									&
 					{\@DPANIP}							\\
 				\hline
-					{9.}								&
-					{DOSEN PEMBIMBING II}				&
-					{ }									&
-					{\hspace{7.0cm} Tanda Tangan :}		\\
-					
-					{ }									&
-					{a. Nama Lengkap}					&
-					{:}									&
-					{\@DPBNama}							\\
-					
-					{ }									&
-					{b. NIP}							&
-					{:}									&
-					{\@DPBNIP}							\\
-				\hline
-					{10.}								&
+					{12.}								&
 					{TEMPAT PELAKSANAAN}				&
 					{:}									&
 					{\@Tempat}							\\
 				\hline
-					{11.}								&
+					{13.}								&
 					{JUMLAH HALAMAN}					&
 					{:}									&
 					{\pageref{LastPage}}				\\
@@ -492,7 +501,8 @@
 	\begin{center}%
 		\bfseries \large\textbf{INTISARI}
 		\@endparpenalty\@M
-	\end{center}}%
+	\end{center}%
+	\everypar{}\@endpefalse}% paragraf pertama setelah judul tetap berindentasi
 {\par\vfil\null}
 
 %% Setting Enviroment Baru : Ringkasan Eksekutif
@@ -504,7 +514,8 @@
 	\begin{center}%
 		\bfseries \large\textbf{RINGKASAN EKSEKUTIF}
 		\@endparpenalty\@M
-	\end{center}}%
+	\end{center}%
+	\everypar{}\@endpefalse}% paragraf pertama setelah judul tetap berindentasi
 {\par\vfil\null}
 
 %% Mengganti Gaya Penomoran Bab dan Subbab 
