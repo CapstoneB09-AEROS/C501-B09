@@ -1,37 +1,356 @@
-Salah satu kemampuan yang harus dimiliki oleh seorang Sarjana Teknik adalah kemampuan menganalisis sumber-sumber pustaka. Oleh karena itu, di dalam dokuman C-251 ini, mahasiswa perlu melakukan studi pustaka dan menuliskannya sampai kepada level kedalaman dan detail yang memadai. Sebelum melakukan analisis pustaka, uraikan lagi apa saja permasalahan yang ingin Anda selesaikan di dalam \textit{capstone} ini. Dari permasalahan tersebut, carilah literatur yang sudah pernah membahas dan menyelesaikan masalah yang sama, dan pilihkan pustaka kunci yang akan Anda adopsi untuk membantu menyelesaikan Anda. 
+% TODO: pengantar Bab 3 ditulis menggantikan teks petunjuk template. Sesuaikan bila daftar subbab 3.2 sampai 3.7 berubah.
+Sistem AEROS harus memantau kadar CO dan CO\textsubscript{2} di dalam kabin, lalu memberi peringatan dan membuka jendela. Bab ini menganalisis pustaka untuk tiap bagian sistem, yaitu sensor, konversi sinyal, komunikasi data, penyaringan, strategi peringatan, dan sistem informasi. Hasil analisis dipakai untuk memilih metode pada implementasi. Pilihan yang berbeda dari rancangan awal dijelaskan beserta alasannya.
 
-Untuk melakukan analisis studi, tentukan minimal tiga pustaka yang paling berkaitan dengan solusi yang diusulkan. Buatlah analisis yang mendalam dan jika perlu disimulasikan metodenya untuk menyelesaikan permasalahan Anda. Uraikan secara ringkas sumber-sumber yang membahas berbagai kerangka teori dan metode-metode yang mungkin untuk digunakan secara sistematis. Gunakan \textit{heading} untuk menguraikan metode yang ada.
+\section{Analisis Pustaka Sensor Gas}
+\label{sec:Analisis_Pustaka_Sensor_Gas}
 
-\section{Metode 1}
-\label{sec:Metode_01}
+    % Sumber: datasheet MQ-7 Hanwei (dibaca langsung 16 Nov 2026), datasheet MiCS-5524 rev 6 [1], manual MH-Z19C v1.2 [2],
+    % halaman produk Winsen MH-Z19B (dibaca 16 Nov 2026), parameter-dan-sumber.md A1, A4, A9, B1, uji-5-parfum, ringkasan-temuan.md butir 9 dan 12, peringatan-dan-ambang.md A2.
+    % TODO: (1) alasan beralih dari MH-Z19B ke MH-Z19C tidak tercatat di dokumentasi. Alasan beralih dari MQ-7 berasal dari penjelasan pengguna 16 Nov 2026
+    % (sama-sama estimasi; pemanas MQ-7 periodik 150 detik). Anjuran pemanasan 24 jam MiCS-5524: FAQ teknisi SGX di panduan Adafruit [4], bagian bawah halaman
+    % ("we advise to age the sensor for 24 hours before any characterization or calibration procedure"); bukan dari datasheet SGX.
+    % (2) Rancangan awal menulis MH-Z19B 0--5.000 ppm dan +/-50 ppm, tetapi halaman produk Winsen menulis +/-(50 ppm + 5%). Cek manual MH-Z19B v1.6 (PDF) sebelum final dan ganti bibitem mhz19b.
+    % (3) Rujukan "Subbab 3.2" ditulis manual; ganti dengan \ref bila label 3.2 sudah ada.
+    Subbab ini membandingkan sensor gas yang dipertimbangkan untuk CO dan CO\textsubscript{2}. Rancangan awal memakai MQ-7 dan MH-Z19B, sedangkan implementasi memakai MiCS-5524 dan MH-Z19C.
 
-    \lipsum[1-3]
+    \subsection{Sensor CO}
+    \label{sec:Analisis_Sensor_CO}
 
-\section{Metode 2}
-\label{sec:Metode_02}
+    MQ-7 dan MiCS-5524 adalah sensor MOX. Prinsip kerja dan spesifikasi MiCS-5524 yang dipakai diuraikan pada Subbab~\ref{sec:Sensor_MOX}. Keduanya berbeda pada pemanas, rentang, dan kebutuhan rangkaian (Tabel~\ref{tab:Ch03_Sensor_CO}).
 
-    \lipsum[4-6]
-    
-    \subsection{Sub-Metode 2}
-    \label{subsec:Sub-Metode_02}
-    
-    \lipsum[7-9]
+    \begin{longtable}{|L{3.0cm}|L{6.0cm}|L{6.0cm}|}
+        \caption{Perbandingan Sensor CO}
+        \label{tab:Ch03_Sensor_CO}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Aspek} & \textbf{MQ-7 \cite{mq7}} & \textbf{MiCS-5524 \cite{mics5524}} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Aspek} & \textbf{MQ-7 \cite{mq7}} & \textbf{MiCS-5524 \cite{mics5524}} \\ \hline
+        \endhead
+        Rentang CO & 20--2.000~ppm & 1--1.000~ppm \\ \hline
+        Pemanas & 5~V selama 60 detik, lalu 1,4~V selama 90 detik, bergantian & Satu tegangan, 2,4~V \\ \hline
+        Daya pemanas & Sekitar 350~mW & 76~mW \\ \hline
+        Hambatan acuan & $R_s$ 2--20~k$\Omega$ pada 100~ppm CO & $R_0$ 100--1.500~k$\Omega$ di udara bersih \\ \hline
+        Pemanasan awal & Minimal 48 jam & Tidak tertulis di datasheet. Dianjurkan 24 jam \cite{adafruit_mics} \\ \hline
+        Gas lain pada kurva & H\textsubscript{2}, LPG, CH\textsubscript{4}, alkohol & Etanol, H\textsubscript{2}, NH\textsubscript{3}, CH\textsubscript{4}, propana, isobutana \\ \hline
+        Kelebihan & Sensitivitas tinggi terhadap CO. Hambatan sensor kecil & Rangkaian pemanas sederhana. Daya kecil. Batas bawah 1~ppm \\ \hline
+        Kekurangan & Pemanas dua tegangan butuh rangkaian pewaktu. Batas bawah 20~ppm dekat dengan ambang 35~ppm & Tanpa waktu respons dan tanpa persamaan ppm. $R_0$ besar sehingga keluarannya kecil \\ \hline
+    \end{longtable}
 
-\section{Metode 3}
-\label{sec:Metode_03}
+    Kedua sensor tidak selektif karena kurva datasheet-nya menunjukkan respons terhadap gas lain \cite{mq7, mics5524}. Pada MiCS-5524, hal ini terbukti pada uji parfum di ruangan. Satu semprotan dari jarak 30~cm menurunkan $R_s$ sebesar 92\% dalam 13 detik dan menaikkan estimasi CO hingga 72--83~ppm. Peringatan CO karena itu berarti kemungkinan CO atau gas lain.
 
-    \lipsum[10-12]
-    
-    \subsection{Sub-Metode 3A}
-    \label{subsec:Sub-Metode_03A}
-    
-    \lipsum[13-15]
-    
-    \subsection{Sub-Metode 3B}
-    \label{subsec:Sub-Metode_03B}
-    
-    \lipsum[15-18]
+    Datasheet MiCS-5524 hanya memuat kurva $R_s/R_0$ terhadap kadar tanpa persamaan \cite{mics5524}. Digitalisasi piksel pada kurva CO menghasilkan $R_s/R_0 = A\,c^{-\beta}$ dengan $A = 3{,}46$ dan $\beta = 0{,}840$. Bentuk ini setara dengan Persamaan~\ref{eqn:Ch02_Pangkat} dengan $B = -1/\beta$. Pembacaan kurva secara visual ($A = 3{,}7$ dan $\beta = 0{,}856$) memberi selisih kadar kurang dari 1,5\% pada 35--100~ppm dan paling besar 7\% pada 1~ppm.
 
+    Dua temuan lain membatasi hasilnya. Pertama, $R_0$ terukur di udara bersih adalah 1.730~k$\Omega$, di atas rentang datasheet. Catu sensor hanya 4,64--4,79~V, di bawah 4,9~V yang diminta datasheet, sehingga dugaannya pemanas kurang panas. Dugaan ini belum diuji. Kedua, $R_s$ di ruang uji tanpa gas turun dari sekitar 2.045~k$\Omega$ ke 900--1.000~k$\Omega$ dalam 4 jam. Pustaka melaporkan bahwa suhu dan kelembapan memengaruhi sensor MOX \cite{mox_drift}, tetapi keduanya tidak diukur pada uji ini sehingga penyebabnya belum dapat dipastikan.
+
+    Kedua sensor MOX hanya menghasilkan estimasi CO. Keduanya tidak selektif dan tidak dikalibrasi dengan gas acuan, sehingga penggantian MQ-7 dengan MiCS-5524 tidak mengubah sifat estimasi itu. Alasan penggantiannya ada pada pemanas. Pemanas MQ-7 bergantian antara 5~V dan 1,4~V dalam siklus 150 detik dan membutuhkan rangkaian pewaktu \cite{mq7}, sedangkan MiCS-5524 memakai satu tegangan pemanas \cite{mics5524}. Pemanasan awal tetap diperlukan pada kedua sensor. Datasheet MQ-7 mensyaratkan minimal 48 jam \cite{mq7}. Tanya jawab teknis SGX pada panduan Adafruit menganjurkan 24 jam sebelum karakterisasi atau kalibrasi MiCS-5524 \cite{adafruit_mics}.
+
+    Untuk AEROS, pemanas satu tegangan MiCS-5524 menyederhanakan rangkaian. Batas bawahnya 1~ppm juga mencakup ambang 35~ppm dengan leluasa. Konsekuensinya sinyal keluaran hanya puluhan mV di udara bersih sehingga membutuhkan ADC 16-bit (Subbab~\ref{sec:Analisis_Konversi_Sinyal}).
+
+    \subsection{Sensor CO\texorpdfstring{\textsubscript{2}}{2}}
+    \label{sec:Analisis_Sensor_CO2}
+
+    MH-Z19B dan MH-Z19C adalah modul NDIR dari produsen yang sama. Prinsip kerja dan spesifikasi MH-Z19C yang dipakai diuraikan pada Subbab~\ref{sec:Sensor_NDIR}. Tabel~\ref{tab:Ch03_Sensor_CO2} membandingkan keduanya.
+
+    \begin{longtable}{|L{3.0cm}|L{6.0cm}|L{6.0cm}|}
+        \caption{Perbandingan Sensor CO\textsubscript{2}}
+        \label{tab:Ch03_Sensor_CO2}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Aspek} & \textbf{MH-Z19B \cite{mhz19b}} & \textbf{MH-Z19C \cite{mhz19c}} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Aspek} & \textbf{MH-Z19B \cite{mhz19b}} & \textbf{MH-Z19C \cite{mhz19c}} \\ \hline
+        \endhead
+        Rentang & 400--2.000, 5.000, atau 10.000~ppm (pilihan) & Varian 5.000~ppm: 400--5.000~ppm. Varian lain: 400--2.000 dan 400--10.000~ppm \\ \hline
+        Akurasi & $\pm$(50~ppm + 5\% pembacaan) & $\pm$(50~ppm + 5\% pembacaan) \\ \hline
+        Waktu respons T90 & Kurang dari 120 detik & Kurang dari 120 detik \\ \hline
+        Pemanasan awal & 3 menit & 1 menit \\ \hline
+        Catu daya & 4,5--5,5~V DC & 5,0 $\pm$ 0,1~V (tabel) atau 4,5--5,5~V (catatan) \\ \hline
+    \end{longtable}
+
+    Rancangan awal mencatat MH-Z19B dengan rentang 0--5.000~ppm dan akurasi $\pm$50~ppm. Catatan itu tidak sesuai dengan halaman produk Winsen, yang menulis $\pm$(50~ppm + 5\%) untuk MH-Z19B \cite{mhz19b}. Jadi akurasi kedua modul sama, dan peralihan ke MH-Z19C tidak memperlonggar akurasi. Perbedaan yang nyata hanya pemanasan awal dan status produksi. Winsen menyatakan MH-Z19B telah dihentikan \cite{mhz19b}.
+
+    Pada ambang tindakan 4.000~ppm, akurasi $\pm$(50~ppm + 5\%) berarti $\pm$250~ppm. Sensor yang lambat juga membuat pembacaan tertinggal sekitar 130--350~ppm saat CO\textsubscript{2} naik 150--400~ppm per menit. Angka ini perkiraan dari rumus dan belum terukur. Total margin sekitar 400--600~ppm, sehingga ambang 4.000~ppm tetap berada di bawah batas paparan kerja 5.000~ppm (Tabel~\ref{tab:Ch02_Batas_Paparan}).
+
+    Pada uji nyala dingin, nilai palsu 410 dan 500~ppm teramati sampai detik ke-128. Waktu itu lebih lama dari pemanasan 1 menit pada manual MH-Z19C. Karena itu pemanasan 3 menit, sama dengan MH-Z19B, dipakai pada firmware.
+
+\section{Analisis Pustaka Konversi Sinyal}
+\label{sec:Analisis_Konversi_Sinyal}
+
+    % RANCANGAN 3.2 (penulis: Maritza).
+    % Isi: perbandingan ADC internal ESP32 (12-bit, tidak linier di ujung rentang, saturasi) dan ADS1115 (16-bit, I2C, PGA). DAC tidak dipakai, tidak dibahas.
+    % Jangan diulang: definisi ADC, sampling, kuantisasi, resolusi, L = 2^N, dan ADS1115 sudah di Subbab 2.6.1 (rujuk dengan \ref{subsec:adc_ads1115}).
+    % Tambahkan di sini hanya yang belum ada di Bab 2: teorema Nyquist (dipakai juga di 3.4 karena pola 0,5 Hz = setengah laju sampling 1 Hz).
+    % Bukti sendiri: keluaran MiCS di udara bersih hanya puluhan mV (23--50 mV, rekaman 25 Okt); hitung langkah (LSB) ESP32 lawan ADS1115 pada rentang itu.
+    % Sumber: ringkasan-temuan.md temuan 2; datasheet ADS1115 [3] (belum dibaca langsung, baca dulu sebelum mengutip angka); dokumentasi ADC ESP32 (belum ada di daftar pustaka).
+    \lipsum[1]
+
+\section{Analisis Pustaka Metode Komunikasi Data}
+\label{sec:Analisis_Komunikasi_Data}
+
+    % RANCANGAN 3.3 (3.3.1: Maritza; 3.3.2: teman backend).
+    % Jangan diulang: MQTT (publish-subscribe, QoS, keep alive, LWT, retained, TLS, HMAC) dan HTTP/REST sudah didefinisikan di Subbab 2.3. 3.3.2 hanya MEMBANDINGKAN.
+    % Hasil uji komunikasi bukan di sini (Bab 5).
+    \subsection{Komunikasi Sensor ke ESP32}
+    \label{sec:Komunikasi_Sensor_ESP32}
+
+    % Isi: analog, UART (MH-Z19C), I2C (ADS1115, LCD), SPI sebagai pembanding; kecepatan, jumlah pin, jarak. Definisi UART dan I2C boleh di sini (Subbab 2.4 hanya menyebut sekilas).
+    % Sumber: manual MH-Z19C [2] (UART 9600 8N1, 3,3 V), datasheet ADS1115 [3], spesifikasi I2C (nxp_i2c, sudah dikutip di Bab 2).
+    \lipsum[1]
+
+    \subsection{Komunikasi ESP32 ke Server}
+    \label{sec:Komunikasi_ESP32_Server}
+
+    % Isi: MQTT lawan HTTP (overhead, push lawan pull, QoS lawan ACK, last will) dan alasan memakai TLS + HMAC. Kriteria perbandingan saja, tanpa menjelaskan ulang apa itu QoS atau HMAC.
+    % Sumber: oasis_mqtt, http_rfc, tls_standard, hmac_rfc (sudah di Bab 2), komunikasi.md.
+    \lipsum[1]
+
+\section{Analisis Pustaka Metode Penyaringan}
+\label{sec:Analisis_Penyaringan}
+
+    % Sumber: Smith [smith_dsp] bab 15, hlm. 277--280 (dibaca langsung dari PDF dspguide.com, 16 Nov 2026): MA optimal untuk derau acak dengan step tajam (hlm. 277),
+    % Persamaan 15-2 dan penilaian "very poor low-pass filter" (hlm. 280). Data: analisis/hasil/hasil-filter-3jam-2026-10-25.txt (13.000 baris, t_s 2137--15140),
+    % analisis/filter.md, analisis/ringkasan-temuan.md temuan 1, 4, 6, 7, 8; keputusan/algoritma-firmware.md bagian 1.
+    % Pembuktian sendiri: sisa noise MA ganjil dihitung dari amplitudo pola 0,5 Hz (95% ragam dari 13,9% = 13,6%) dan gerakan lambat 3,3%; cocok dengan simulasi (5,60% dan 4,29%).
+    % TODO: (1) EMA (IIR orde satu) dan median belum punya rujukan buku; tambahkan Smith bab 19 (rekursif satu kutub) dan sumber filter median yang sudah dibaca.
+    % (2) Angka uji mobil dan kamar pagi dari pengujian/laporan/uji-1 (Civic 25 Okt), uji-2 (kamar pagi 26 Okt), uji-4 (Avanza 26 Okt) dan analisis/ringkasan-temuan.md bagian 7 no. 1--2. Rentang "0,7--1,8% lawan 1,0--2,3%" di kerangka-c501.md TIDAK dipakai (tidak ada satu berkas hasil yang memuatnya); yang ditulis adalah angka per uji.
+    % (3) Pola 0,5 Hz belum diuji pada PCB akhir dan firmware v2.5; uji pembuktian penyebab (jalankan tanpa MH-Z19C) belum dilakukan.
+    Penyaringan diterapkan pada hambatan sensor $R_s$ MiCS-5524 tiap detik, sebelum dibagi $R_0$ dan diubah menjadi ppm. Kadar CO\textsubscript{2} tidak disaring karena sensornya sudah lambat (T90 kurang dari 120 detik) dan simpangan baku deraunya hanya 3,4~ppm.
+
+    Rekaman uji awal 13.000 detik di ruang tertutup (bukan kabin mobil) menunjukkan simpangan baku $R_s$ terhadap tren lambat sebesar 13,9\%. Sekitar 95\% ragam goyangan itu adalah satu pola yang bergantian naik dan turun tiap detik, yaitu 0,5~Hz. Frekuensi ini sama dengan setengah laju sampling 1~Hz (frekuensi Nyquist, Subbab~\ref{sec:Analisis_Konversi_Sinyal}). Sisa goyangan sekitar 3,3\% adalah gerakan lambat.
+
+    \subsection{Moving Average}
+    \label{sec:Penyaringan_MA}
+
+    \textit{Moving average} (MA) kausal dengan $M$ titik merata-ratakan $M$ pembacaan terakhir:
+    \begin{equation}
+        \label{eqn:Ch03_MA}
+        y[n] = \frac{1}{M}\sum_{k=0}^{M-1} x[n-k]
+    \end{equation}
+    Smith menyebut MA optimal untuk mengurangi derau acak sambil mempertahankan respons \textit{step} yang tajam \cite{smith_dsp}. Respons frekuensinya adalah
+    \begin{equation}
+        \label{eqn:Ch03_Respons_MA}
+        H(f) = \frac{\sin(\pi f M)}{M\sin(\pi f)}
+    \end{equation}
+    dengan $f$ dalam siklus per sampel (0--0,5) \cite{smith_dsp}. Smith juga menilai MA sebagai filter lolos-rendah yang buruk karena penurunannya lambat dan pelemahan di pita hentinya kecil \cite{smith_dsp}.
+
+    Persamaan~\ref{eqn:Ch03_Respons_MA} bernilai nol pada $f = k/M$ untuk bilangan bulat $k$. Bila $M$ genap, $f = 0{,}5$ ikut menjadi nol sehingga pola 0,5~Hz terhapus. Bila $M$ ganjil, amplitudo pola itu tersisa $1/M$. Keterlambatan kelompok MA kausal adalah $(M-1)/2$ sampel, yaitu 2,5 detik untuk $M = 6$ pada sampling 1~detik.
+
+    Teori ini cocok dengan data. Bila amplitudo pola 0,5~Hz sebesar 13,6\% dan gerakan lambat 3,3\%, sisa noise untuk $M$ ganjil adalah $\sqrt{(13{,}6/M)^2 + 3{,}3^2}$. Hasilnya 5,6\% untuk $M = 3$ dan 4,3\% untuk $M = 5$. Simulasi memberi 5,60\% dan 4,29\% (Tabel~\ref{tab:Ch03_Filter}).
+
+    \subsection{Exponential Moving Average (EMA)}
+    \label{sec:Penyaringan_EMA}
+
+    \textit{Exponential moving average} (EMA) memberi bobot lebih besar pada pembacaan terbaru:
+    \begin{equation}
+        \label{eqn:Ch03_EMA}
+        y[n] = \alpha\,x[n] + (1-\alpha)\,y[n-1], \qquad 0 < \alpha \le 1
+    \end{equation}
+    EMA adalah filter rekursif lolos-rendah orde satu yang hanya menyimpan satu nilai sebelumnya. Waktu untuk mencapai 90\% perubahan mendadak adalah $t_{90} = \ln 0{,}1 / \ln(1-\alpha)$ sampel, yaitu 10,3 detik untuk $\alpha = 0{,}2$.
+
+    EMA tidak memiliki nol pada 0,5~Hz. Penguatannya di frekuensi itu adalah $\alpha/(2-\alpha)$. Pola 0,5~Hz karena itu hanya diredam menjadi 11\% untuk $\alpha = 0{,}2$ dan 5,3\% untuk $\alpha = 0{,}1$. Peredaman yang lebih kuat menuntut $\alpha$ kecil dan membuat respons lambat. EMA 0,05 membutuhkan 44 detik untuk mencapai 90\% (Tabel~\ref{tab:Ch03_Filter}).
+
+    \subsection{Median}
+    \label{sec:Penyaringan_Median}
+
+    Filter median mengambil nilai tengah dari $M$ pembacaan terakhir. Filter ini nonlinier sehingga respons frekuensi dan keterlambatan kelompok klasik tidak berlaku. Keunggulannya menolak lonjakan tunggal tanpa mengubah nilai di sekitarnya.
+
+    Pada pola bergantian $a, b, a, b, a$, nilai tengahnya selalu $a$ sehingga amplitudo pola tidak berkurang. Itu sebabnya median 5 hanya meredam 2\% (Tabel~\ref{tab:Ch03_Filter}). Median dapat dilanjutkan dengan EMA. Median 5 lalu EMA 0,1 meredam 78\% dan meloloskan lonjakan 2,4\%, tetapi responsnya 23 detik.
+
+    \subsection{Perbandingan dan Hasil Simulasi}
+    \label{sec:Penyaringan_Hasil}
+
+    Tabel~\ref{tab:Ch03_Filter} membandingkan filter pada 13.000 pembacaan $R_s$ dari uji awal di ruang tertutup (25 Oktober 2026, udara diasumsikan bersih). Noise adalah simpangan baku $R_s$ terhadap tren lambat. T90 diukur dari penurunan mendadak 50\% pada simulasi dan bukan keterlambatan kelompok. Lonjakan adalah persentase satu titik yang diganti +30\% dan masih lolos ke keluaran.
+
+    \begin{longtable}{|l|c|c|c|c|}
+        \caption{Perbandingan Filter pada Rekaman $R_s$ MiCS-5524}
+        \label{tab:Ch03_Filter}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Filter} & \textbf{Noise (\%)} & \textbf{Peredaman} & \textbf{T90 (detik)} & \textbf{Lonjakan (\%)} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Filter} & \textbf{Noise (\%)} & \textbf{Peredaman} & \textbf{T90 (detik)} & \textbf{Lonjakan (\%)} \\ \hline
+        \endhead
+        Mentah & 13,9 & 0\% & 0 & 30,0 \\ \hline
+        SMA 3 & 5,6 & 60\% & 2 & 10,1 \\ \hline
+        SMA 4 & 3,3 & 76\% & 3 & 7,4 \\ \hline
+        SMA 5 & 4,3 & 69\% & 4 & 6,0 \\ \hline
+        SMA 6 & 3,3 & 76\% & 5 & 4,9 \\ \hline
+        SMA 8 & 3,3 & 76\% & 7 & 3,7 \\ \hline
+        SMA 10 & 3,3 & 76\% & 8 & 2,9 \\ \hline
+        EMA 0,05 & 2,6 & 81\% & 44 & 1,5 \\ \hline
+        EMA 0,1 & 3,2 & 77\% & 21 & 3,0 \\ \hline
+        EMA 0,2 & 3,6 & 74\% & 10 & 5,9 \\ \hline
+        Median 5 & 13,6 & 2\% & 2 & 11,4 \\ \hline
+        Median 5 lalu EMA 0,1 & 3,1 & 78\% & 23 & 2,4 \\ \hline
+    \end{longtable}
+
+    Semua MA berjumlah genap meredam 76\% dan hanya berbeda pada kecepatan serta lonjakan yang lolos. SMA 4 memberi 3 detik dan 7,4\%, SMA 6 memberi 5 detik dan 4,9\%, dan SMA 8 memberi 7 detik dan 3,7\%. Memperpanjang filter tidak mengurangi sisa noise karena SMA 4 sama baiknya dengan SMA 10. Sisa 3,3\% adalah gerakan lambat. SMA 6 lebih baik daripada EMA 0,2 pada ketiga ukuran, yaitu peredaman 76\% lawan 74\%, respons 5 lawan 10 detik, dan lonjakan lolos 4,9\% lawan 5,9\%. Tidak ada filter rata-rata yang membuang lonjakan tunggal sepenuhnya.
+
+    Untuk AEROS, SMA 6 lebih sesuai. Filter ini meredam pola dominan dan hanya menyimpan enam nilai. Keterlambatannya 2,5 detik jauh di bawah konfirmasi peringatan CO yang 30 detik. Panjang akhir (4, 6, atau 8) divalidasi ulang pada rangkaian akhir.
+
+    Pola yang sama muncul pada uji berikutnya. Pada uji di kamar pagi hari, dua uji mobil, dan ruang rapat, goyangan mentah $R_s$ berkisar 7--16\% dan 83--97\% di antaranya berupa pola 0,5~Hz. Pada Civic (25 Oktober), sisa noise SMA 6 adalah 0,9\% lawan 1,3\% untuk EMA 0,2. Estimasi CO berpindah antara 0 dan sekitar 10~ppm sebanyak 1--2 kali lawan 14--19 kali. Pada Avanza (26 Oktober), SMA 6 lebih halus saat jalan mulus, yaitu 0,72\% dan 0,75\% lawan 1,04\% dan 1,05\%. Saat jalan bergelombang, SMA 6 justru lebih kasar, yaitu 3,04\% lawan 2,65\%. Pada seluruh rekaman Avanza selisihnya kecil (1,71\% lawan 1,63\%), tetapi estimasi CO berpindah 9 kali lawan 27 kali. SMA 8 karena itu disiapkan sebagai cadangan bila guncangan jalan memicu alarm palsu.
+
+    Hasil ini memiliki empat batasan. Pertama, SMA berjumlah genap bergantung pada pola 0,5~Hz yang tetap dan sampling tepat 1 detik. Bila interval berubah menjadi 5 detik, pola itu tidak lagi terhapus. Kedua, asal pola belum terbukti. Periodenya mendekati 2 detik dan diduga berasal dari rangkaian sendiri, misalnya siklus pengukuran MH-Z19C yang berinteraksi dengan \textit{loop} 1 detik. Ketiga, Tabel~\ref{tab:Ch03_Filter} berasal dari satu sesi uji awal di ruang tertutup dengan lonjakan simulasi. Hasil uji mobil dihitung ulang secara luring dari log yang direkam dengan \textit{firmware} awal (EMA 0,2) dan hanya mengukur sisa noise serta perpindahan estimasi CO. Keempat, respons SMA 6 terhadap kenaikan CO yang nyata belum terukur karena tim tidak memiliki sumber CO yang aman. Respons yang teramati hanya berasal dari uji parfum.
+\section{Analisis Pustaka Strategi Keputusan Peringatan}
+\label{sec:Analisis_Strategi_Peringatan}
+
+    Strategi keputusan menentukan kapan AEROS memperingatkan pengemudi dan kapan sistem membuka jendela. Batas paparan sudah dirangkum pada Tabel~\ref{tab:Ch02_Batas_Paparan}. Semua batas itu dibuat untuk tempat kerja atau ruang dalam gedung dan bukan untuk kabin kendaraan. Subbab ini menjelaskan cara tiap ambang dipilih dari batas tersebut dan didukung data uji tim. Nilai yang dibahas adalah konstanta rancangan pada \textit{firmware} v2.5. \textit{Firmware} itu juga memiliki mode pengembangan yang menurunkan ambang CO\textsubscript{2} menjadi 700 dan 800~ppm untuk uji meja. Mode itu tidak dibahas.
+
+    \subsection{Ambang CO\texorpdfstring{\textsubscript{2}}{2}}
+    \label{sec:Ambang_CO2}
+
+    Peringatan CO\textsubscript{2} memiliki dua tingkat (Tabel~\ref{tab:Ch03_Ambang_CO2}). Pada 2.500~ppm sistem hanya membunyikan tiga bip pendek sekali dan mengirim peringatan ke aplikasi. Pada 4.000~ppm sistem membunyikan satu bip panjang sekali lalu membuka jendela setengah.
+
+    \begin{longtable}{|L{2.0cm}|L{3.8cm}|L{3.8cm}|L{5.0cm}|}
+        \caption{Ambang CO\textsubscript{2} pada \textit{Firmware} v2.5}
+        \label{tab:Ch03_Ambang_CO2}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Tingkat} & \textbf{Ambang} & \textbf{Tindakan} & \textbf{Dasar} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Tingkat} & \textbf{Ambang} & \textbf{Tindakan} & \textbf{Dasar} \\ \hline
+        \endhead
+        Peringatan & $\geq$ 2.500~ppm, 3 bacaan berturut-turut & 3 bip pendek sekali dan notifikasi di aplikasi & Satish dkk. \cite{satish2012}. Bukti lemah sehingga hanya berupa peringatan \\ \hline
+        Tindakan & $\geq$ 4.000~ppm, 3 bacaan berturut-turut & 1 bip panjang sekali. Jendela dibuka setengah, paling lama 180 detik & Batas kerja 5.000~ppm \cite{niosh_co2} dikurangi margin sensor \\ \hline
+        Selesai & $<$ 2.500~ppm selama 10 detik, setelah jendela terbuka minimal 20 detik & Jendela ditutup & Pada uji di Avanza, CO\textsubscript{2} terus turun 460--550~ppm setelah jendela ditutup \\ \hline
+    \end{longtable}
+
+    Ambang 1.000~ppm tidak dipakai. ASHRAE tidak menetapkan batas itu \cite{ashrae_co2}, dan 96\% kendaraan dalam studi di Hong Kong melampauinya \cite{barnes2018}. Peringatan pada angka tersebut akan hampir selalu menyala.
+
+    Dasar angka 2.500~ppm adalah penelitian Satish dkk. yang hasilnya belum terkonfirmasi (Subbab~\ref{sec:Kualitas_Udara_Kabin}). ASHRAE juga menilai bukti dampak CO\textsubscript{2} pada kadar umum dalam ruang tidak konsisten \cite{ashrae_co2}. Karena itu 2.500~ppm hanya menjadi peringatan lembut dan bukan batas kesehatan.
+
+    Batas kerja 5.000~ppm (Tabel~\ref{tab:Ch02_Batas_Paparan}) tidak dipakai langsung sebagai ambang tindakan. Margin sensor sekitar 400--600~ppm (Subbab~\ref{sec:Analisis_Sensor_CO2}), dan jendela masih butuh waktu untuk menurunkan kadar. Ambang tindakan karena itu 4.000~ppm. Tindakan memang diperlukan karena 16\% kendaraan di Hong Kong melampaui 5.000~ppm \cite{barnes2018}.
+
+    Tindakan pada 2.500~ppm ditolak karena membuat jendela sering membuka dan menutup. Pada uji mobil, CO\textsubscript{2} membutuhkan 7,4--11,5 menit untuk naik dari 2.500 ke 4.000~ppm di Avanza dan Ayla dengan empat penumpang. Satu siklus buka-tutup memakan sekitar 15,6--20 menit. Jendela pada uji itu dibuka dan ditutup secara manual mengikuti bunyi. Dua jendela depan yang dibuka setengah menurunkan CO\textsubscript{2} Avanza dari sekitar 4.440 ke 2.380~ppm dalam sekitar 95 detik. Angka ini menjadi dasar batas 180 detik pada Tabel~\ref{tab:Ch03_Ambang_CO2}.
+
+    Konfirmasi tiga bacaan berturut-turut atau sekitar 3 detik hanya menolak satu bacaan yang rusak. Pada rekaman ruang tertutup sekitar 7.900 bacaan, simpangan baku CO\textsubscript{2} hanya 3--4~ppm dan tidak ada lompatan 30~ppm atau lebih dalam satu detik. Ambang berjarak ratusan ppm dari kadar normal sehingga \textit{noise} tidak dapat memicu tindakan.
+
+    Ambang 4.000~ppm memiliki satu keterbatasan. Di Civic EG6 1994 dengan empat penumpang, CO\textsubscript{2} mendatar pada 3.500--3.700~ppm selama lebih dari 40 menit di atas 2.500~ppm dan tidak pernah mencapai 4.000~ppm. Mobil tua itu tidak kedap, sehingga kebocoran udara mengimbangi hembusan napas penumpang. Sistem hanya memberi peringatan dan tidak membuka jendela.
+
+    % TODO: "siklus 15,6--20 menit" dibaca dari bentuk kurva CO2 (jam buka-tutup manual tidak tercatat di log); sumber: pengujian/laporan/uji-4 dan analisis/perbandingan-mobil-2026-11-04.md.
+    % TODO: dasar 2.500 di Satish baru dibaca bagian Methods; cek Results sebelum sidang (daftar-pustaka.md, status baca).
+
+    \subsection{Ambang CO}
+    \label{sec:Ambang_CO}
+
+    Kadar CO di kabin hanya berupa estimasi karena MiCS-5524 tidak selektif dan tidak dikalibrasi dengan gas acuan (Subbab~\ref{sec:Analisis_Sensor_CO}). Ambang CO karena itu dipilih dari batas paparan dan bukan dari ketelitian sensor (Tabel~\ref{tab:Ch03_Ambang_CO}).
+
+    \begin{longtable}{|L{2.0cm}|L{2.8cm}|L{3.4cm}|L{6.4cm}|}
+        \caption{Ambang CO pada \textit{Firmware} v2.5}
+        \label{tab:Ch03_Ambang_CO}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Tingkat} & \textbf{Ambang (estimasi)} & \textbf{Konfirmasi} & \textbf{Dasar} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Tingkat} & \textbf{Ambang (estimasi)} & \textbf{Konfirmasi} & \textbf{Dasar} \\ \hline
+        \endhead
+        Waspada & $\geq$ 35~ppm & 30 detik berturut-turut & NIOSH REL 35~ppm \cite{niosh_co} dan WHO 1 jam $\approx$ 30~ppm \cite{who_iaq} \\ \hline
+        Bahaya & $\geq$ 87~ppm & Tanpa konfirmasi & WHO 15 menit, 100~mg/m\textsuperscript{3} $\approx$ 87~ppm \cite{who_iaq} \\ \hline
+        Selesai & $<$ 30~ppm & 60 detik berturut-turut & Pita histeresis 5~ppm di bawah ambang waspada \\ \hline
+    \end{longtable}
+
+    Rancangan awal memakai 200~ppm untuk tingkat bahaya. Angka itu adalah plafon NIOSH untuk tempat kerja (Tabel~\ref{tab:Ch02_Batas_Paparan}). Angka itu diganti dengan 87~ppm karena WHO menetapkan batas untuk ruang hunian pada selang 15 menit.
+
+    UL 2034 adalah standar alarm CO rumah. Laporan CPSC mencatat bahwa alarm harus aktif dalam selang waktu yang bergantung pada kadar, yaitu 60--240 menit pada 70~ppm, 10--50 menit pada 150~ppm, dan 4--15 menit pada 400~ppm \cite{cpsc_ul2034}. Batas bawah selang mencegah alarm terlalu cepat dan batas atasnya mencegah alarm terlambat. Struktur kadar dan waktu itu dipinjam sebagai bentuk. Angkanya tidak dipakai. Kadar yang lebih tinggi menuntut waktu yang lebih pendek.
+
+    Konfirmasi 30 detik pada 35~ppm jauh lebih cepat daripada selang UL 2034. AEROS karena itu tidak boleh diklaim memenuhi standar tersebut. Pilihan ini memiliki dua alasan. Pertama, UL 2034 dibuat untuk alarm rumah yang dapat menyala berjam-jam, sedangkan paparan di kabin berlangsung selama perjalanan. Kedua, tindakan yang diambil murah, yaitu membuka jendela. Alarm palsu lebih murah daripada alarm yang terlambat. Alarm palsu tetap mengganggu pengguna, dan sensor yang tidak selektif memperbesar kemungkinannya. Batas WHO 30~ppm untuk 1 jam mendukung kewaspadaan di sekitar 30--35~ppm. Batas itu bukan alasan untuk alarm dalam 30 detik.
+
+    Konfirmasi 30 detik menolak lonjakan gas lain yang singkat. Pada uji parfum di ruangan (Subbab~\ref{sec:Analisis_Sensor_CO}), estimasi CO hanya berada di atas 35~ppm selama 14 detik. Alarm karena itu tidak berbunyi. Kabin belum diuji dengan gas lain.
+
+    Kemampuan deteksi CO belum terbukti. Tim tidak memiliki sumber CO yang aman dan alat ukur acuan. Di lima uji mobil, estimasi CO tertinggi 27~ppm dan tidak pernah mencapai 35~ppm. Tidak ada alarm CO palsu dalam sekitar 9.700 bacaan pada tiga uji. Hasil itu membuktikan ketahanan terhadap alarm palsu dan bukan kemampuan mendeteksi.
+
+    % TODO: UL 2034 dikutip lewat laporan CPSC (sumber sekunder); teks UL 2034 asli tidak dibaca. Selang waktu sudah dicek langsung pada Tabel 3 laporan CPSC.
+    % TODO: "sekitar 9.700 bacaan pada tiga uji" dari tugas/hasil-dan-pengujian.md butir 1b.4; cek uji mana yang dihitung.
+
+    \subsection{Pemicu Peringatan}
+    \label{sec:Pemicu_Peringatan}
+
+    Pemicu peringatan dapat berupa ambang mutlak, perubahan relatif, konfirmasi waktu, histeresis, dan mesin status. Tabel~\ref{tab:Ch03_Pemicu} merangkum penerapan kelimanya pada AEROS.
+
+    \begin{longtable}{|L{2.8cm}|L{5.2cm}|L{7.0cm}|}
+        \caption{Pemicu Peringatan pada AEROS}
+        \label{tab:Ch03_Pemicu}
+        \vspace{-0.75em}\\
+        \hline
+        \textbf{Mekanisme} & \textbf{Penerapan} & \textbf{Alasan} \\ \hline
+        \endfirsthead
+        \hline
+        \textbf{Mekanisme} & \textbf{Penerapan} & \textbf{Alasan} \\ \hline
+        \endhead
+        Ambang mutlak & Dasar semua tingkat pada Tabel~\ref{tab:Ch03_Ambang_CO2} dan Tabel~\ref{tab:Ch03_Ambang_CO} & Angka berasal dari batas paparan dan tidak bergantung pada pola perubahan \\ \hline
+        Perubahan relatif & Hanya pada uji arah (Subbab~\ref{sec:Sumber_CO_Dalam_Luar}), dengan batas penurunan $R_s$ sebesar 25\% & Batas 8\% dan 15\% terlampaui oleh gerakan alami $R_s$ \\ \hline
+        Konfirmasi waktu & CO: 30 detik untuk waspada. CO\textsubscript{2}: 3 bacaan berturut-turut & Menolak lonjakan sesaat dan bacaan rusak \\ \hline
+        Histeresis & CO: menyala $\geq$ 35~ppm, selesai $<$ 30~ppm selama 60 detik & Pita 5~ppm sekitar 3,6 kali \textit{noise} sisa \\ \hline
+        Mesin status & Lima status. Aturan CO mendahului aturan CO\textsubscript{2} & Data tidak valid tidak boleh tampil sebagai kondisi aman \\ \hline
+    \end{longtable}
+
+    Perubahan relatif tidak dipakai sebagai pemicu peringatan. Tanpa gas, $R_s$ bergeser secara alami dalam siklus lambat 7--12 menit dengan amplitudo sekitar $\pm$8\% sampai $\pm$17\%. Sumber siklus ini belum diketahui. Penurunan $R_s$ lebih dari 15\% dalam 30 detik terjadi pada 1,6--2,6\% waktu pengamatan tanpa gas. Batas 8\% dan 15\% karena itu akan terlampaui oleh gerakan alami. Batas 25\% tidak pernah terlampaui dalam sekitar 28.000 detik pengamatan tanpa gas. Penurunan terbesar adalah 21,4\%, dan 23\% saat pintu dibuka. Marginnya sempit sehingga uji arah dapat menyimpulkan sumber luar secara keliru bila $R_s$ bergeser lebih cepat pada kondisi lain.
+
+    Histeresis mencegah status bergantian saat estimasi berada di sekitar ambang. Pita antara 35 dan 30~ppm sekitar 14\% dari ambang. Sisa \textit{noise} setelah SMA 6 sekitar 3,3\% pada $R_s$ atau 3,9\% pada ppm (Subbab~\ref{sec:Analisis_Penyaringan}). Pita itu sekitar 3,6 kali \textit{noise} pada udara bersih. Pada CO\textsubscript{2}, batas selesai sama dengan ambang peringatan (2.500~ppm). Pembatalannya harus bertahan 10 detik dan menunggu jendela terbuka minimal 20 detik.
+
+    Penundaan dibuat tidak simetris, yaitu cepat memberi peringatan dan lambat membatalkannya. Peringatan CO terkonfirmasi dalam 30 detik, sedangkan pembatalannya memerlukan 60 detik. Bunyi CO diulang tiap 60 detik hingga maksimum 5 menit. Bunyi CO\textsubscript{2} tidak diulang karena siklusnya sekitar 15 menit.
+
+    Mesin status AEROS memiliki lima status, yaitu pemanasan, normal, waspada, bahaya, dan gangguan. Tidak ada alarm selama 180 detik pertama setelah sensor menyala. Pemanasan itu diperlukan karena MH-Z19C mengeluarkan nilai palsu 410 dan 500~ppm hingga detik ke-128 (Subbab~\ref{sec:Analisis_Sensor_CO2}). Sensor yang tidak valid ditampilkan sebagai gangguan dan bukan sebagai kondisi aman. Jendela tidak dibuka otomatis berdasarkan data yang tidak valid. Bila CO dan CO\textsubscript{2} sama-sama aktif, aturan CO mendahului karena CO menyangkut keselamatan dan arah jendelanya bergantung pada sumber gas.
+
+    \textit{Firmware} v2.5 menambah peringatan sebelum jendela naik. Buzzer berbunyi sekali selama 0,5 detik, lalu jendela bergerak setelah jeda 3 detik. Fitur anti-jepit tidak dibangun, sehingga bunyi ini hanya memberi kesempatan menyingkirkan tangan atau benda. Angka 0,5 dan 3 detik adalah usulan dan belum teramati pada log uji mobil.
+
+    % TODO: "siklus Rs 7--12 menit, amplitudo +/-8 sampai +/-17%" dari ringkasan-temuan.md temuan lintas uji no. 4 (tiga uji berbeda, ESP lama dan baru). "1,6--2,6% waktu" dan "21,4%/23%" dari temuan no. 6.
+    % TODO: pita histeresis 3,6x noise berlaku pada udara bersih; noise saat ada gas belum diukur (ringkasan-temuan.md bagian 3).
+
+    \subsection{Sumber CO di Dalam atau di Luar Kabin}
+    \label{sec:Sumber_CO_Dalam_Luar}
+
+    Sensor tidak dapat membedakan CO yang berasal dari dalam kabin dari CO yang masuk dari luar, misalnya knalpot kendaraan di depan. Keduanya membutuhkan tindakan yang berlawanan. Bila sumber di dalam, jendela dibuka untuk mengencerkan CO. Bila sumber di luar, jendela terbuka justru memasukkan CO.
+
+    Model kesetimbangan massa (Subbab~\ref{sec:Model_Kesetimbangan_Gas}) menjelaskan arah perubahannya. Setelah jendela dibuka, kadar kabin bergerak menuju kadar luar (Persamaan~\ref{eqn:Ch02_Berhenti}). Kadar CO kabin turun bila sumber di dalam dan naik bila udara luar lebih tercemar. Dirks dkk. melaporkan puncak CO sekitar 170~ppm di dalam kabin dan menyimpulkan bahwa sirkulasi dalam paling baik menghindari lonjakan CO \cite{dirks2018}.
+
+    AEROS karena itu menguji arahnya. Setelah CO terkonfirmasi, jendela dibuka dan $R_s$ tersaring dicatat. Tiga puluh detik kemudian, perubahan $R_s$ dibandingkan dengan catatan awal.
+    \begin{enumerate}
+        \item $R_s$ naik lebih dari 5\% berarti CO turun. Sumber dianggap di dalam dan jendela tetap terbuka.
+        \item $R_s$ turun lebih dari 25\% berarti CO naik. Sumber dianggap di luar dan jendela ditutup.
+        \item Perubahan di antara keduanya dianggap tidak jelas. Sumber diperlakukan sebagai luar karena menutup jendela lebih aman.
+    \end{enumerate}
+    Setelah jendela ditutup karena sumber luar, uji tidak diulang sampai CO berada di bawah 30~ppm selama 60 detik. Hal ini mencegah paparan berulang.
+
+    Uji ini membebani penghuni bila sumber di luar. Dari Persamaan~\ref{eqn:Ch02_Berhenti}, kadar kabin naik sebesar $1 - e^{-Nt}$ dari selisih kadar luar dan dalam. Pada uji Avanza dengan dua jendela depan setengah terbuka, $N$ diperkirakan 46--79 per jam. Dalam 30 detik, kadar kabin karena itu naik sekitar 32--48\% dari selisih tersebut. Angka ini perkiraan dari model dan belum terukur. Rentang $N$ juga bergantung pada konstanta waktu sensor yang diasumsikan 30--70 detik.
+
+    Waktu 30 detik lebih panjang daripada 13 detik yang dibutuhkan $R_s$ untuk turun 92\% pada uji parfum. Penundaan SMA 6 hanya 2,5 detik (Subbab~\ref{sec:Analisis_Penyaringan}). Waktu uji yang lebih panjang menambah paparan. Waktu yang lebih pendek berisiko tidak cukup untuk respons sensor terhadap CO, yang tidak tertulis di datasheet. Keputusan ini adalah \textit{trade-off} yang diakui.
+
+    Uji arah belum pernah dipicu di mobil karena estimasi CO tertinggi hanya 27~ppm. Uji itu juga belum dicoba dengan CO asli. Sensor yang tidak selektif dapat pula menyimpulkan arah dari gas lain.
+
+    % TODO: Dirks dkk. baru dibaca bagian abstrak (server MDPI menolak unduhan teks penuh). Jangan menambah angka lain (misalnya "171 ppm dalam 10 detik") sebelum teks penuh dibaca.
+    % TODO: N = 46--79 per jam dari analisis/model-vs-uji.md (Avanza, dua jendela setengah, tau sensor 30--70 detik). Ganti "46--79" bila N dihitung ulang.
+
+\section{Analisis Pustaka Sistem Informasi}
+\label{sec:Analisis_Sistem_Informasi}
+
+    % RANCANGAN 3.6 (penulis: teman backend dan software; Maritza cek konsistensi dengan firmware).
+    % Jangan diulang: MQTT, REST, Node.js, Supabase/PostgreSQL, Flutter, dan FCM sudah didefinisikan di Subbab 2.3 dan 2.8. Di sini hanya perbandingan alternatif dan alasan.
+    \subsection{Aliran Data}
+    \label{sec:Aliran_Data}
+
+    % ESP32 langsung ke database lawan lewat broker + worker (worker memeriksa HMAC, nonce, jendela waktu, lalu mengirim ACK bertanda tangan setelah data tersimpan).
+    \lipsum[1]
+
+    \subsection{Basis Data}
+    \label{sec:Basis_Data}
+
+    % Relasional (PostgreSQL di Supabase) lawan alternatif lain (dokumen, deret waktu); normalisasi sampai 3NF; langganan realtime.
+    % Bukti sendiri: co_level dan co2_level per gas (kolom bertulisan "CO,CO2" melanggar 1NF); status kolom turunan; device_state pengecualian sengaja (cache realtime).
+    % Sumber: rancangan-database-mvp.md, rancangan-worker-mvp.md, data-dan-database.md, komunikasi.md, uji 8 (latensi median 1,45 detik).
+    \lipsum[1]
+
+    \subsection{Aplikasi Pemantauan dan Notifikasi}
+    \label{sec:Aplikasi_Notifikasi}
+
+    % Flutter (ponsel) lawan web; tampilan status, riwayat, notifikasi. Konfirmasi dengan tim: alur FCM, tabel device_token, Database Webhook, dan Edge Function di Bab 2.8 belum ada di dokumentasi aeros-sensor.
+    \lipsum[1]
 
 \section{Pemilihan Metode}
 \label{sec:Pemilihan_Metode}

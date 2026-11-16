@@ -1,5 +1,3 @@
-% TODO: subbab 2.3 sampai 2.9 masih placeholder (lorem ipsum). Isi sesuai kerangka-c501.md; 2.3 dan 2.8 dikerjakan bersama teman backend dan software.
-
 \section{Kualitas Udara Kabin dan Batas Paparan}
 \label{sec:Kualitas_Udara_Kabin}
 
@@ -145,14 +143,45 @@
 \section{Internet of Things}
 \label{sec:Internet_of_Things}
 
-    % TODO: placeholder. 2.3.1 MQTT (publish/subscribe, broker, QoS, TLS, HMAC-SHA256) dan 2.3.2 HTTP dan REST. Kerjakan bersama teman backend.
-    \lipsum[1]
+  
+Internet of Things (IoT) merupakan konsep integrasi perangkat fisik dengan jaringan komunikasi sehingga perangkat dapat mengumpulkan, mengirimkan, dan bertukar data melalui suatu sistem yang saling terhubung. Menurut National Institute of Standards and Technology (NIST), sistem IoT melibatkan sejumlah kemampuan utama, yaitu penginderaan (\textit{sensing}), komputasi, komunikasi, dan aktuasi \cite{nist_iot}. Melalui integrasi tersebut, data yang diperoleh dari lingkungan fisik dapat diproses dan dimanfaatkan untuk mendukung pemantauan maupun pengendalian suatu sistem.
 
-\section{Development Board: ESP32}
-\label{sec:Development_Board_ESP32}
+Secara umum, arsitektur IoT mencakup perangkat pengindraan dan pengendalian, jaringan komunikasi, serta layanan pemrosesan dan penyimpanan data. Perangkat pengindraan memperoleh informasi dari lingkungan, sedangkan jaringan komunikasi memungkinkan informasi tersebut diteruskan kepada sistem lain. Data yang diterima selanjutnya dapat disimpan, diolah, dan disajikan melalui antarmuka pengguna. Dalam sistem AEROS, konsep IoT diterapkan untuk mendukung pengiriman data konsentrasi CO dan CO$_2$ menuju layanan backend dan aplikasi seluler. Adapun proses pengukuran, penentuan kondisi peringatan, dan pengendalian aktuator tetap dapat berlangsung secara lokal pada mikrokontroler tanpa memerlukan koneksi internet.
 
-    % TODO: placeholder. mikrokontroler, Wi-Fi, ADC 12-bit, UART, I2C, GPIO; versi DevKitC V4; gambar papan dengan sumber.
-    \lipsum[1]
+\subsection{Message Queuing Telemetry Transport (MQTT)}
+
+Message Queuing Telemetry Transport (MQTT) merupakan protokol komunikasi berbasis mekanisme \textit{publish-subscribe} yang dirancang untuk pertukaran pesan dengan kebutuhan sumber daya dan penggunaan bandwidth yang relatif rendah. Protokol ini sesuai untuk komunikasi pada perangkat IoT yang memiliki keterbatasan kemampuan pemrosesan maupun kondisi jaringan yang tidak selalu stabil \cite{oasis_mqtt}.
+
+Pada mekanisme \textit{publish-subscribe}, komunikasi melibatkan tiga komponen utama, yaitu \textit{publisher}, \textit{broker}, dan \textit{subscriber}. Publisher bertugas mengirimkan pesan ke suatu topik (\textit{topic}), sedangkan subscriber menerima pesan dengan berlangganan pada topik yang sesuai. Broker berperan sebagai perantara yang menerima pesan dari publisher dan mendistribusikannya kepada subscriber. Mekanisme ini memungkinkan pengirim dan penerima bertukar informasi tanpa harus membangun komunikasi langsung satu sama lain \cite{oasis_mqtt}.
+
+MQTT menyediakan tiga tingkat Quality of Service (QoS) untuk menentukan mekanisme pengiriman pesan. QoS 0 menerapkan prinsip \textit{at most once}, yaitu pesan dikirim tanpa jaminan pengiriman ulang. QoS 1 menggunakan prinsip \textit{at least once}, sehingga pesan dapat dikirim kembali apabila konfirmasi penerimaan belum diperoleh, dengan kemungkinan terjadinya duplikasi. Sementara itu, QoS 2 menggunakan prinsip \textit{exactly once} melalui mekanisme pertukaran konfirmasi tambahan untuk menghindari duplikasi pengiriman pada tingkat protokol MQTT. Tingkat QoS tersebut mengatur jaminan pengiriman pesan antarentitas MQTT, tetapi tidak secara langsung menjamin keberhasilan penyimpanan data pada basis data aplikasi \cite{oasis_mqtt}.
+
+Selain pengiriman pesan, MQTT memiliki mekanisme \textit{keep alive} untuk memantau keberlangsungan komunikasi antara klien dan broker. Fitur \textit{Last Will and Testament} (LWT) memungkinkan broker menerbitkan pesan yang telah ditentukan apabila koneksi klien terputus secara tidak normal. MQTT juga menyediakan fitur \textit{retained message}, yaitu penyimpanan pesan terakhir pada suatu topik oleh broker agar dapat diterima oleh subscriber yang baru berlangganan \cite{mqtt_oasis}. Fitur-fitur tersebut mendukung pemantauan status konektivitas perangkat dalam sistem IoT.
+
+Keamanan komunikasi MQTT dapat ditingkatkan melalui penggunaan Transport Layer Security (TLS) untuk melindungi pertukaran data pada jalur komunikasi. TLS menyediakan mekanisme autentikasi dan perlindungan kerahasiaan serta integritas data selama transmisi \cite{tls_standard}. Selain perlindungan pada lapisan transport, autentikasi pesan dapat diterapkan menggunakan Hash-based Message Authentication Code (HMAC), yaitu mekanisme pemeriksaan integritas dan autentisitas pesan dengan fungsi hash kriptografis dan kunci rahasia bersama \cite{hmac_rfc}. Penggunaan HMAC-SHA256 dapat dikombinasikan dengan nilai unik atau \textit{nonce} pada setiap pesan serta pemeriksaan keunikan dan waktu pesan untuk membantu mencegah serangan pengiriman ulang (\textit{replay attack}). Pada sistem AEROS, MQTT digunakan sebagai protokol pertukaran data antara ESP32 dan layanan backend melalui broker, sedangkan mekanisme keamanan diterapkan untuk melindungi komunikasi perangkat.
+
+\subsection{Hypertext Transfer Protocol (HTTP) dan Representational State Transfer (REST)}
+
+Hypertext Transfer Protocol (HTTP) merupakan protokol komunikasi pada lapisan aplikasi yang menggunakan mekanisme \textit{request-response}. Dalam mekanisme tersebut, klien mengirimkan permintaan (\textit{request}) kepada server, kemudian server memberikan tanggapan (\textit{response}) yang sesuai. HTTP menyediakan sejumlah metode permintaan, antara lain GET untuk memperoleh representasi sumber daya dan POST untuk mengirimkan data yang akan diproses oleh server \cite{http_rfc}.
+
+Representational State Transfer (REST) merupakan gaya arsitektur untuk pengembangan sistem terdistribusi berbasis jaringan. REST menekankan penggunaan antarmuka yang seragam, identifikasi sumber daya, dan interaksi yang tidak mengharuskan server menyimpan keadaan sesi aplikasi klien pada setiap permintaan. Penerapan prinsip REST melalui HTTP memungkinkan sistem mengakses dan memanipulasi sumber daya menggunakan antarmuka layanan yang terstruktur \cite{fielding_rest}.
+
+Dalam pengembangan sistem IoT, HTTP dapat digunakan untuk komunikasi antara perangkat dan layanan berbasis web, sedangkan REST API menyediakan antarmuka untuk pengelolaan dan pertukaran data. Supabase, sebagai salah satu layanan backend berbasis PostgreSQL, menyediakan REST API yang memungkinkan aplikasi mengakses dan mengelola data melalui permintaan HTTP \cite{supabase_rest}. Pada sistem AEROS, komunikasi HTTP digunakan untuk mendukung portal konfigurasi Wi-Fi pada ESP32, sementara layanan REST API dimanfaatkan dalam pengelolaan dan pengaksesan data pada sistem backend dan aplikasi seluler.
+
+
+
+
+\section{Development Board ESP32}
+\label{sec:esp32}
+
+Mikrokontroler merupakan sistem komputasi terintegrasi yang menggabungkan unit pemrosesan, memori, serta periferal masukan dan keluaran dalam satu perangkat untuk menjalankan fungsi pengendalian tertentu. Mikrokontroler umumnya digunakan pada sistem tertanam (\textit{embedded system}) yang membutuhkan pengolahan data dan interaksi langsung dengan perangkat elektronik. Salah satu keluarga mikrokontroler yang mendukung pengembangan sistem tertanam dengan konektivitas nirkabel adalah ESP32 yang dikembangkan oleh Espressif Systems.
+
+ESP32 mengintegrasikan kemampuan pemrosesan dengan konektivitas Wi-Fi dan Bluetooth. Mikrokontroler ini juga menyediakan berbagai periferal, antara lain General Purpose Input/Output (GPIO), Analog-to-Digital Converter (ADC), Universal Asynchronous Receiver-Transmitter (UART), dan Inter-Integrated Circuit (I$^2$C). GPIO digunakan untuk membaca maupun menghasilkan sinyal digital, ADC digunakan untuk mengonversi sinyal analog menjadi data digital, UART mendukung komunikasi serial asinkron, sedangkan I$^2$C memungkinkan pertukaran data dengan perangkat periferal melalui jalur komunikasi serial \cite{espressif_esp32}.
+
+ESP32-DevKitC V4 merupakan papan pengembangan berbasis ESP32 yang menyediakan akses terhadap berbagai fungsi mikrokontroler melalui konektor masukan dan keluaran. Papan ini dilengkapi antarmuka USB-to-UART untuk mendukung pemrograman dan komunikasi dengan komputer, serta fasilitas catu daya dan tombol pengendalian dasar. Sebagian besar pin masukan dan keluaran modul ESP32 dihubungkan ke konektor pada papan sehingga mempermudah integrasi dengan komponen elektronik eksternal \cite{esp32_devkitc_v4}.
+
+Kombinasi kemampuan pemrosesan, periferal, dan konektivitas nirkabel tersebut memungkinkan ESP32 digunakan sebagai pengendali utama dalam sistem Internet of Things (IoT). Mikrokontroler dapat melakukan pengolahan data serta pengendalian perangkat secara lokal, sekaligus menyediakan komunikasi dengan sistem eksternal melalui jaringan.
+
 
 \section{Sensor}
 \label{sec:Sensor}
@@ -166,23 +195,23 @@
     \subsection{Sensor Gas Semikonduktor (MOX)}
     \label{sec:Sensor_MOX}
 
-    Sensor gas semikonduktor oksida logam (\textit{metal oxide semiconductor}, MOX) memiliki lapisan yang hambatannya ($R_s$) turun saat terkena gas pereduksi seperti CO \cite{mics5524}. Elemen pemanas di dalam sensor menjaga lapisan itu pada suhu kerja \cite{mics5524}.
+    Sensor gas semikonduktor oksida logam (\textit{metal oxide semiconductor}, MOX) memiliki lapisan peka yang hambatannya ($R_s$) turun saat kadar gas sasaran seperti CO naik \cite{mics5524}. Elemen pemanas di dalam sensor menjaga lapisan itu pada suhu kerja \cite{mics5524}.
 
     Hambatan $R_s$ dibaca lewat pembagi tegangan dengan resistor beban $R_L$. Bila $V_{CC}$ adalah tegangan catu dan $V_{out}$ tegangan pada $R_L$, maka
     \begin{equation}
         \label{eqn:Ch02_Rs}
         R_s = R_L\,\frac{V_{CC} - V_{out}}{V_{out}}
     \end{equation}
-    Datasheet menyatakan kadar gas lewat rasio $R_s/R_0$, dengan $R_0$ hambatan sensor di udara bersih \cite{mics5524}. Kadar $c$ (ppm) dihitung dari rasio itu dengan hubungan pangkat
+    Datasheet menyatakan kadar gas lewat rasio $R_s/R_0$, dengan $R_0$ hambatan sensor di udara sintetis terkendali pada 23$\pm$5~$^{\circ}$C dan kelembapan relatif 50$\pm$10\% \cite{mics5524}. Kadar $c$ (ppm) dihitung dari rasio itu dengan hubungan pangkat
     \begin{equation}
         \label{eqn:Ch02_Pangkat}
         c = A\left(\frac{R_s}{R_0}\right)^{B}
     \end{equation}
-    dengan $A$ dan $B$ konstanta dari kurva pada datasheet ($B$ negatif).
+    dengan $A$ dan $B$ konstanta hasil pembacaan kurva pada datasheet ($B$ negatif). Nilainya bersifat perkiraan karena datasheet hanya menyajikan kurva dalam bentuk grafik.
 
-    Sensor MOX memiliki tiga keterbatasan. Pertama, sensor tidak selektif karena gas pereduksi lain seperti etanol, hidrogen, dan amonia ikut mengubah $R_s$ \cite{mics5524, adafruit_mics}. Kedua, $R_s$ bergeser terhadap waktu (\textit{drift}) serta dipengaruhi suhu dan kelembapan \cite{mox_drift}. Ketiga, kurva datasheet hanya berlaku pada 25~$^{\circ}$C dan 50\% kelembapan relatif \cite{mics5524}.
+    Sensor MOX memiliki empat keterbatasan. Pertama, sensor tidak selektif karena gas lain seperti etanol, hidrogen, dan amonia ikut mengubah $R_s$ \cite{mics5524, adafruit_mics}. Kedua, $R_s$ bergeser terhadap waktu (\textit{drift}) serta dipengaruhi suhu dan kelembapan \cite{mox_drift}. Ketiga, kurva datasheet hanya berlaku pada 25~$^{\circ}$C dan 50\% kelembapan relatif \cite{mics5524}. Keempat, lapisan peka dapat rusak bila terkena pelarut organik, uap silikon, atau asap rokok \cite{mics5524}.
 
-    MiCS-5524 adalah sensor MOX untuk CO, etanol, hidrogen, amonia, metana, propana, dan isobutana dengan rentang CO 1--1.000~ppm \cite{mics5524}. Pemanasnya bertegangan 2,4~V (76~mW) dengan catu 4,9--5,1~V, dan $R_0$ berkisar 100--1.500~k$\Omega$ antarunit \cite{mics5524}. Datasheet tidak memuat waktu respons. Modul yang dipakai berkaki tiga, yaitu 5~V, GND, dan keluaran analog (Gambar~\ref{fig:Ch02_MiCS5524}).
+    MiCS-5524 adalah sensor MOX untuk CO, etanol, hidrogen, amonia, metana, propana, dan isobutana dengan rentang CO 1--1.000~ppm \cite{mics5524}. Pemanasnya bertegangan 2,4~V (76~mW, 32~mA) dengan catu 4,9--5,1~V, dan daya pemanas tidak boleh melebihi 88~mW \cite{mics5524}. Nilai $R_0$ berkisar 100--1.500~k$\Omega$ antarunit \cite{mics5524}. Datasheet tidak memuat waktu respons. Modul yang dipakai berkaki empat, yaitu 5~V, GND, keluaran analog, dan EN. Menurut Adafruit, pin EN ditarik ke 5~V untuk mematikan sensor \cite{adafruit_mics} (Gambar~\ref{fig:Ch02_MiCS5524}).
 
     \begin{figure}[h!]
         \centering
@@ -205,26 +234,242 @@
         \label{fig:Ch02_MHZ19C}
     \end{figure}
 
-\section{Komponen Antarmuka dan Aktuator}
-\label{sec:Komponen_Antarmuka_Aktuator}
 
-    % TODO: placeholder. 2.6.1 ADS1115; 2.6.2 LCD I2C 16x2 dan buzzer aktif; 2.6.3 relay dan penggerak jendela. Tiap komponen satu gambar.
-    \lipsum[1]
+\section{Komponen Akuisisi Data, Antarmuka, dan Aktuator}
+\label{sec:antarmuka_aktuator}
+
+Sistem tertanam memerlukan komponen pendukung untuk menghubungkan proses pengukuran, pengolahan data, dan pengendalian perangkat fisik. Komponen tersebut mencakup pengonversi sinyal analog menjadi digital, perangkat antarmuka pengguna, serta rangkaian pengendali aktuator. Pemahaman terhadap prinsip kerja setiap komponen diperlukan untuk mendukung perancangan sistem yang mampu menerima informasi dari lingkungan dan menghasilkan respons yang sesuai.
+
+\subsection{Konversi Analog ke Digital}
+\label{subsec:adc_ads1115}
+
+Analog-to-Digital Converter (ADC) merupakan komponen yang berfungsi mengubah sinyal analog menjadi representasi digital agar dapat diproses oleh sistem komputasi. Proses konversi melibatkan pengambilan sampel (\textit{sampling}) terhadap sinyal masukan dan kuantisasi (\textit{quantization}) untuk merepresentasikan nilai analog ke dalam sejumlah tingkat diskret. Salah satu karakteristik utama ADC adalah resolusi, yaitu jumlah bit yang digunakan untuk merepresentasikan hasil konversi.
+
+Secara ideal, jumlah tingkat kuantisasi ADC dengan resolusi $N$ bit dinyatakan melalui Persamaan~\ref{eq:tingkat_kuantisasi}.
+
+\begin{equation}
+L = 2^N
+\label{eq:tingkat_kuantisasi}
+\end{equation}
+
+dengan $L$ merupakan jumlah tingkat kuantisasi dan $N$ merupakan resolusi ADC dalam satuan bit. Resolusi yang lebih tinggi memungkinkan representasi perubahan sinyal analog dalam tingkat yang lebih kecil. Namun, ketelitian pengukuran tidak hanya bergantung pada resolusi, melainkan juga dipengaruhi oleh derau, kestabilan referensi, dan karakteristik rangkaian masukan.
+
+ADS1115 merupakan ADC eksternal beresolusi 16 bit yang menggunakan arsitektur delta-sigma. Komponen ini menyediakan empat kanal masukan analog yang dapat dikonfigurasi melalui multiplexer sebagai masukan \textit{single-ended} atau diferensial. ADS1115 juga dilengkapi Programmable Gain Amplifier (PGA) untuk menyesuaikan rentang pengukuran dan antarmuka I$^2$C untuk komunikasi dengan mikrokontroler \cite{ti_ads1115}.
+
+\subsection{Antarmuka Masukan dan Keluaran}
+\label{subsec:antarmuka_io}
+
+Antarmuka masukan dan keluaran memungkinkan pengguna memperoleh informasi dari perangkat serta memberikan instruksi kepada sistem. Antarmuka keluaran dapat berupa informasi visual maupun suara, sedangkan antarmuka masukan memungkinkan pengguna memberikan sinyal kendali melalui perangkat seperti sakelar atau tombol.
+
+Liquid Crystal Display (LCD) merupakan perangkat keluaran visual yang memanfaatkan perubahan sifat optik kristal cair untuk menampilkan informasi. LCD karakter berukuran 16$\times$2 menyediakan dua baris tampilan dengan kapasitas 16 karakter pada setiap baris. Pengendalian LCD karakter dapat dilakukan melalui modul antarmuka I$^2$C yang menggunakan jalur Serial Data (SDA) dan Serial Clock (SCL). Penggunaan antarmuka tersebut mengurangi jumlah jalur sinyal yang diperlukan dibandingkan pengendalian paralel secara langsung \cite{nxp_i2c,adafruit_lcd}.
+
+Buzzer merupakan komponen keluaran yang menghasilkan bunyi sebagai indikator atau peringatan. Berdasarkan mekanisme pengoperasiannya, buzzer dapat dibedakan menjadi buzzer aktif dan pasif. Buzzer aktif memiliki rangkaian pembangkit osilasi internal sehingga dapat menghasilkan bunyi ketika diberikan tegangan atau sinyal pengaktifan yang sesuai. Sebaliknya, buzzer pasif membutuhkan sinyal penggerak dengan frekuensi tertentu untuk menghasilkan bunyi \cite{active_buzzer}.
+
+Push button merupakan sakelar mekanis yang menghasilkan perubahan hubungan listrik ketika ditekan. Perubahan tersebut dapat dimanfaatkan sebagai masukan digital pada mikrokontroler. Dalam rangkaian digital, resistor \textit{pull-up} atau \textit{pull-down} dapat digunakan untuk mempertahankan keadaan logika yang terdefinisi ketika sakelar tidak diaktifkan.
+
+\subsection{Relay dan Rangkaian Pengendali Beban}
+\label{subsec:relay_driver}
+
+Relay merupakan komponen switching yang memungkinkan suatu rangkaian listrik dikendalikan menggunakan sinyal dari rangkaian lainnya. Pada relay elektromekanis, arus listrik yang mengalir melalui kumparan menghasilkan medan magnet yang menggerakkan kontak mekanis. Pergerakan tersebut mengubah hubungan listrik pada rangkaian yang dikendalikan.
+
+Berdasarkan keadaan kontak ketika relay tidak diaktifkan, terdapat kontak Normally Open (NO) yang berada dalam keadaan terbuka dan Normally Closed (NC) yang berada dalam keadaan tertutup. Susunan kontak tersebut memungkinkan relay digunakan untuk menghubungkan atau memutuskan aliran listrik menuju suatu beban \cite{omron_relay}.
+
+Pada sistem berbasis mikrokontroler, pengendalian beban dapat memerlukan rangkaian driver apabila kebutuhan arus atau tegangan komponen switching melebihi kemampuan keluaran mikrokontroler. Rangkaian driver berfungsi sebagai perantara antara sinyal kendali digital dan komponen pengendali beban. Pemilihan komponen switching dan rangkaian driver perlu mempertimbangkan karakteristik listrik beban serta kebutuhan proteksi rangkaian.
+
+\subsection{Motor Penggerak Jendela}
+\label{subsec:motor_jendela}
+
+Motor listrik merupakan perangkat elektromekanis yang mengubah energi listrik menjadi energi mekanis melalui interaksi medan magnet. Salah satu jenis motor yang digunakan dalam berbagai sistem penggerak adalah motor arus searah atau Direct Current (DC). Pada motor DC, interaksi antara medan magnet dan arus listrik menghasilkan torsi yang digunakan untuk memutar poros motor.
+
+Pada motor DC magnet permanen, arah putaran dapat diubah dengan membalik polaritas tegangan yang diberikan pada terminal motor. Perubahan polaritas menyebabkan perubahan arah aliran arus pada bagian penggerak sehingga arah torsi dan putaran motor ikut berubah. Prinsip tersebut memungkinkan motor DC digunakan untuk menghasilkan gerakan dua arah melalui rangkaian pengendali yang sesuai \cite{dc_motor_control}.
+
+Salah satu penerapan motor DC adalah mekanisme \textit{power window} pada kendaraan. Mekanisme ini memanfaatkan putaran motor yang diteruskan melalui sistem mekanis untuk menggerakkan kaca jendela ke arah membuka maupun menutup. Pengendalian gerakan tersebut memerlukan pengaturan arah putaran serta penghentian motor sesuai kondisi operasional.
+
 
 \section{Sumber Energi DC}
 \label{sec:Sumber_Energi_DC}
 
-    % TODO: placeholder. catu mobil 12 V, buck converter ke 5 V, adaptor USB; pentingnya catu 5 V stabil untuk sensor MOX.
-    \lipsum[1]
+Sumber energi merupakan bagian penting dalam sistem elektronik karena menyediakan daya listrik yang dibutuhkan oleh setiap komponen agar dapat beroperasi sesuai fungsinya. Pada sistem AEROS, sumber energi berasal dari sistem kelistrikan kendaraan dengan tegangan nominal 12 V DC. Tegangan tersebut digunakan sebagai masukan utama yang selanjutnya disesuaikan melalui rangkaian catu daya sebelum didistribusikan kepada komponen elektronik, seperti sensor gas dan mikrokontroler ESP32. Penggunaan sumber energi DC dipilih karena sistem AEROS dirancang untuk beroperasi di dalam kabin kendaraan sehingga dapat memanfaatkan sumber listrik yang telah tersedia pada kendaraan.
+
+\subsection{Catu Daya Arus Searah (Direct Current)}
+\label{subsec:Catu_Daya_DC}
+
+Arus searah atau \textit{Direct Current} (DC) merupakan jenis arus listrik yang mengalir dalam satu arah. Sumber tegangan DC banyak digunakan pada perangkat elektronik karena komponen seperti sensor, mikrokontroler, dan rangkaian digital membutuhkan suplai tegangan dengan polaritas tertentu. Salah satu sumber energi DC yang umum digunakan adalah baterai, termasuk baterai pada sistem kelistrikan kendaraan.
+
+Sistem kelistrikan kendaraan memiliki tegangan nominal 12 V DC yang digunakan untuk menyuplai berbagai perangkat elektronik. Meskipun demikian, tegangan aktual pada sistem kendaraan dapat mengalami perubahan bergantung pada kondisi baterai, sistem pengisian, dan beban listrik yang sedang digunakan. Oleh karena itu, tegangan dari sumber kendaraan perlu disesuaikan sebelum digunakan oleh perangkat elektronik yang memiliki kebutuhan tegangan lebih rendah.
+
+Dalam sistem AEROS, sumber 12 V DC berfungsi sebagai masukan bagi rangkaian pengondisi tegangan. Rangkaian tersebut diperlukan agar suplai daya yang diterima oleh setiap komponen sesuai dengan spesifikasi operasionalnya. Dengan demikian, penggunaan sumber energi kendaraan dapat mendukung pengoperasian sistem tanpa memberikan tegangan yang tidak sesuai secara langsung kepada komponen elektronik.
+
+\subsection{\textit{DC-DC Buck Converter}}
+\label{subsec:Buck_Converter}
+
+\textit{Buck converter} merupakan salah satu jenis konverter \textit{Direct Current to Direct Current} (DC-DC) yang berfungsi menurunkan tegangan DC pada sisi masukan menjadi tegangan DC yang lebih rendah pada sisi keluaran. Konverter ini termasuk dalam kategori konverter pensaklaran (\textit{switching converter}) yang mengatur perpindahan energi menggunakan komponen elektronik seperti sakelar semikonduktor, induktor, kapasitor, dan dioda atau sakelar sinkron. Pengaturan proses pensaklaran memungkinkan tegangan keluaran dipertahankan pada nilai tertentu sesuai rancangan rangkaian.
+
+Secara ideal, hubungan antara tegangan masukan dan tegangan keluaran pada \textit{buck converter} dapat dinyatakan melalui persamaan berikut:
+
+\begin{equation}
+    \label{eq:Buck_Converter}
+    V_{\text{out}} = D \times V_{\text{in}}
+\end{equation}
+
+dengan:
+\begin{itemize}
+    \item $V_{\text{out}}$ merupakan tegangan keluaran konverter (V).
+    \item $V_{\text{in}}$ merupakan tegangan masukan konverter (V).
+    \item $D$ merupakan \textit{duty cycle}, yaitu perbandingan durasi sakelar berada pada kondisi aktif terhadap satu periode pensaklaran.
+\end{itemize}
+
+Persamaan tersebut menunjukkan bahwa tegangan keluaran ideal ditentukan oleh nilai \textit{duty cycle} dan tegangan masukan. Dalam penerapan sebenarnya, terdapat rugi-rugi daya pada komponen rangkaian sehingga tegangan keluaran dan efisiensi konverter dapat berbeda dari kondisi ideal.
+
+Pada sistem AEROS, \textit{buck converter} digunakan untuk menurunkan tegangan nominal 12 V DC dari sistem kelistrikan kendaraan menjadi 5 V DC. Tegangan tersebut selanjutnya dimanfaatkan sebagai jalur suplai bagi komponen yang membutuhkan masukan 5 V, termasuk sensor gas yang digunakan pada sistem. Penggunaan konverter ini memungkinkan sumber energi kendaraan dimanfaatkan oleh perangkat elektronik dengan kebutuhan tegangan yang berbeda.
+
+\subsection{Kebutuhan Tegangan Sensor dan Mikrokontroler}
+\label{subsec:Kebutuhan_Tegangan_Komponen}
+
+Setiap komponen elektronik memiliki karakteristik dan kebutuhan tegangan operasional yang berbeda. Kesesuaian antara tegangan suplai dan spesifikasi komponen perlu diperhatikan karena tegangan yang terlalu rendah dapat menyebabkan komponen tidak bekerja secara optimal, sedangkan tegangan yang melebihi batas operasional dapat menimbulkan kerusakan.
+
+Salah satu komponen yang digunakan dalam sistem AEROS adalah sensor gas berbasis \textit{Metal Oxide Semiconductor} (MOX). Sensor MOX bekerja dengan memanfaatkan perubahan karakteristik listrik material oksida logam ketika berinteraksi dengan gas tertentu. Pada sensor jenis ini, elemen pemanas (\textit{heater}) digunakan untuk mempertahankan temperatur kerja material sensitif agar proses pendeteksian dapat berlangsung sesuai karakteristik sensor. Oleh karena itu, kebutuhan tegangan dan arus pada elemen pemanas perlu diperhatikan dalam perancangan catu daya. Spesifikasi suplai sensor harus disesuaikan dengan tipe sensor yang digunakan dan tidak dapat digeneralisasi untuk seluruh sensor MOX.
+
+Selain sensor, sistem AEROS menggunakan mikrokontroler ESP32 sebagai pusat pengendalian perangkat. ESP32 memiliki tegangan operasi chip pada rentang 2,3--3,6 V dengan tegangan suplai yang direkomendasikan sebesar 3,3 V. Pada papan pengembangan ESP32, masukan 5 V dapat digunakan melalui konektor USB atau pin masukan daya yang telah dilengkapi regulator tegangan. Dengan demikian, tegangan 5 V dari rangkaian catu daya tidak boleh diberikan secara langsung ke pin GPIO atau pin 3V3 pada ESP32 \cite{espressif_esp32}.
+
+Kesesuaian kebutuhan tegangan tersebut menjadi dasar dalam pembagian jalur suplai daya pada sistem AEROS. Sensor dan papan pengembangan mikrokontroler memperoleh suplai berdasarkan spesifikasi masing-masing sehingga proses pembacaan sensor dan pengendalian sistem dapat berjalan secara terintegrasi.
+
+\subsection{Distribusi dan Kestabilan Tegangan}
+\label{subsec:Distribusi_Kestabilan_Tegangan}
+
+Distribusi daya merupakan proses penyaluran energi listrik dari sumber utama menuju komponen-komponen yang membutuhkan suplai. Pada sistem AEROS, proses distribusi dimulai dari sumber 12 V DC yang dihubungkan ke rangkaian penurun tegangan. Keluaran rangkaian tersebut kemudian disalurkan melalui terminal penghubung menuju bagian sistem yang membutuhkan suplai daya. Penggunaan terminal sekrup dapat mempermudah proses pemasangan kabel, pemeriksaan koneksi, serta pemeliharaan rangkaian.
+
+Kestabilan tegangan menjadi salah satu aspek yang perlu diperhatikan dalam distribusi daya. Perubahan tegangan suplai dapat memengaruhi karakteristik pembacaan sensor maupun kestabilan operasi mikrokontroler. Pada sensor MOX, perubahan suplai terhadap elemen pemanas dapat memengaruhi kondisi kerja sensor. Sementara itu, pada ESP32, suplai yang tidak memenuhi kebutuhan operasional dapat menyebabkan perangkat mengalami kegagalan inisialisasi, \textit{reset}, atau gangguan ketika menjalankan proses komunikasi.
+
+Selain kesesuaian tegangan, kemampuan arus keluaran juga harus diperhatikan. Total kebutuhan arus dari seluruh komponen yang terhubung tidak boleh melampaui kemampuan keluaran rangkaian catu daya. Oleh karena itu, pemilihan konverter perlu mempertimbangkan tegangan masukan, tegangan keluaran, kapasitas arus, efisiensi, dan kondisi termal selama perangkat beroperasi.
+
+Implementasi rangkaian distribusi catu daya pada sistem AEROS ditunjukkan pada Gambar \ref{fig:Rangkaian_Catu_Daya_AEROS}. Rangkaian tersebut menggunakan papan berlubang sebagai media perakitan komponen dan terminal sekrup sebagai titik penghubung jalur kabel. Susunan rangkaian ini digunakan untuk mengintegrasikan jalur suplai daya dari sumber menuju komponen elektronik. Identifikasi fungsi setiap komponen dan polaritas terminal perlu disesuaikan dengan skema rangkaian serta hasil pengukuran pada perangkat yang sebenarnya.
+
+\begin{figure}[h!]
+    \centering
+    \fbox{\parbox[c][5cm]{0.75\textwidth}{\centering \textit{Gambar Rangkaian Catu Daya AEROS}}}
+    \caption{Rangkaian catu daya pada sistem AEROS}
+    \label{fig:Rangkaian_Catu_Daya_AEROS}
+\end{figure}
+
 
 \section{Sistem Informasi}
 \label{sec:Sistem_Informasi}
 
-    % TODO: placeholder. Supabase (PostgreSQL, REST), worker MQTT, aplikasi Flutter. Ditulis teman backend dan software.
-    \lipsum[1]
+Sistem informasi merupakan suatu kesatuan yang terdiri atas perangkat keras, perangkat lunak, basis data, jaringan komunikasi, dan prosedur pengolahan data untuk menghasilkan informasi yang dapat digunakan oleh pengguna. Dalam sistem berbasis Internet of Things (IoT), sistem informasi berperan menghubungkan perangkat fisik dengan layanan pengolahan dan penyimpanan data sehingga informasi dari perangkat dapat diakses melalui antarmuka digital.
+
+Pada sistem AEROS, sistem informasi digunakan untuk mengelola data hasil pemantauan gas di dalam kabin kendaraan. Data yang diperoleh dari sensor diproses oleh mikrokontroler ESP32, kemudian dikirimkan melalui jaringan komunikasi menuju layanan backend. Data tersebut selanjutnya disimpan pada basis data agar dapat diakses oleh aplikasi seluler. Aplikasi berfungsi menyajikan informasi berupa kondisi perangkat, hasil pengukuran sensor, riwayat pembacaan, dan catatan peringatan kepada pengguna.
+
+\subsection{Arsitektur Sistem Informasi AEROS}
+\label{subsec:Arsitektur_Sistem_Informasi_AEROS}
+
+Arsitektur sistem informasi AEROS disusun berdasarkan pemisahan fungsi antara perangkat pengambilan data, komunikasi, pengolahan data, penyimpanan, dan penyajian informasi. Pemisahan tersebut memungkinkan setiap bagian menjalankan tanggung jawabnya masing-masing tanpa membebani satu komponen dengan seluruh proses sistem.
+
+Pada bagian perangkat keras, ESP32 bertugas memperoleh data dari sensor dan menjalankan logika firmware untuk menghasilkan informasi pengukuran serta status kondisi perangkat. Data tersebut dikirimkan melalui protokol MQTT menuju layanan backend. Selanjutnya, worker berbasis Node.js menerima pesan dari broker MQTT dan meneruskan data yang telah disesuaikan ke basis data Supabase. Supabase menyimpan data menggunakan PostgreSQL dan menyediakan akses melalui REST API. Aplikasi seluler yang dikembangkan menggunakan Flutter kemudian mengambil data tersebut untuk ditampilkan kepada pengguna.
+
+Secara umum, alur pengelolaan informasi pada sistem AEROS terdiri atas tahapan berikut:
+\begin{enumerate}
+    \item ESP32 membaca data dari sensor dan menjalankan pemrosesan sesuai logika firmware.
+    \item ESP32 mengirimkan data hasil pemrosesan melalui MQTT.
+    \item Worker backend berbasis Node.js menerima pesan dari broker MQTT.
+    \item Worker meneruskan data ke Supabase untuk disimpan dalam basis data PostgreSQL.
+    \item Aplikasi Flutter mengakses data melalui REST API Supabase.
+    \item Aplikasi menyajikan informasi hasil pemantauan dan riwayat kondisi perangkat kepada pengguna.
+\end{enumerate}
+
+Pemisahan fungsi tersebut memungkinkan proses akuisisi data, pengelolaan komunikasi, penyimpanan, dan penyajian informasi dilakukan melalui komponen yang berbeda tetapi saling terintegrasi.
+
+\subsection{\textit{Message Queuing Telemetry Transport} (MQTT)}
+\label{subsec:MQTT}
+
+\textit{Message Queuing Telemetry Transport} (MQTT) merupakan protokol komunikasi berbasis pesan yang dirancang untuk pertukaran data pada perangkat dengan sumber daya terbatas dan jaringan yang memiliki keterbatasan bandwidth. MQTT menggunakan pola komunikasi \textit{publish-subscribe}, yaitu mekanisme pertukaran pesan yang melibatkan tiga komponen utama: \textit{publisher}, \textit{subscriber}, dan \textit{broker}.
+
+Publisher merupakan pihak yang mengirimkan pesan ke suatu \textit{topic}, sedangkan subscriber merupakan pihak yang berlangganan untuk menerima pesan dari topic tertentu. Broker bertindak sebagai perantara yang menerima pesan dari publisher dan meneruskannya kepada subscriber yang sesuai. Melalui mekanisme tersebut, publisher dan subscriber tidak perlu berkomunikasi secara langsung karena pertukaran pesan dikelola oleh broker \cite{oasis_mqtt}.
+
+Dalam sistem AEROS, MQTT digunakan sebagai jalur komunikasi antara ESP32 dan worker backend. ESP32 bertindak sebagai publisher yang mengirimkan data hasil pemantauan ke topic yang telah ditentukan. Worker backend bertindak sebagai subscriber yang menerima pesan melalui broker MQTT. Data yang diterima kemudian diteruskan ke proses penyimpanan pada Supabase. Penggunaan MQTT memungkinkan pengiriman data perangkat dilakukan secara terpisah dari proses pengolahan dan penyajian informasi pada aplikasi.
+
+\subsection{Node.js sebagai Lingkungan Eksekusi Backend}
+\label{subsec:NodeJS}
+
+Node.js merupakan lingkungan eksekusi JavaScript yang memungkinkan program JavaScript dijalankan di luar browser. Node.js menggunakan mesin JavaScript V8 dan menyediakan mekanisme input-output asinkron serta non-blocking. Karakteristik tersebut memungkinkan aplikasi menangani operasi jaringan dan proses input-output tanpa harus menunggu seluruh operasi selesai secara berurutan \cite{nodejs_intro}.
+
+Pada sistem AEROS, Node.js digunakan untuk menjalankan worker backend yang menangani penerimaan pesan MQTT. Worker merupakan proses yang berjalan di sisi backend untuk melaksanakan tugas tertentu, dalam hal ini menerima pesan dari broker, mengelola struktur data yang diterima, dan meneruskannya ke Supabase. Dengan adanya worker tersebut, proses penerimaan data dari perangkat tidak perlu dilakukan secara langsung oleh aplikasi seluler.
+
+Penggunaan Node.js sesuai dengan kebutuhan backend AEROS karena sistem memerlukan proses komunikasi jaringan secara berkelanjutan antara broker MQTT dan layanan basis data. Worker menjadi penghubung antara aliran data dari perangkat dan proses penyimpanan sehingga data hasil pemantauan dapat dikelola secara terpusat.
+
+\subsection{Supabase dan PostgreSQL}
+\label{subsec:Supabase_PostgreSQL}
+
+Supabase merupakan platform backend yang menyediakan layanan basis data PostgreSQL beserta fitur pendukung untuk pengembangan aplikasi. PostgreSQL merupakan sistem manajemen basis data relasional yang menyimpan informasi dalam bentuk tabel dengan struktur kolom dan baris. Hubungan antartabel dapat dibangun menggunakan atribut kunci sehingga data dapat dikelola secara terorganisasi dan diakses berdasarkan kebutuhan aplikasi \cite{supabase_database}.
+
+Pada sistem AEROS, Supabase digunakan sebagai layanan penyimpanan data hasil pemantauan dan informasi kondisi perangkat. PostgreSQL menjadi basis data utama yang menyimpan beberapa jenis informasi dengan fungsi berbeda. Struktur penyimpanan tersebut mencakup tabel \textit{sensor\_readings}, \textit{device\_state}, \textit{alert\_logs}, dan \textit{device\_token}.
+
+Tabel \textit{sensor\_readings} digunakan untuk menyimpan hasil pembacaan sensor, termasuk nilai konsentrasi gas, status hasil pemantauan, dan waktu pengukuran. Tabel \textit{device\_state} menyimpan informasi kondisi terkini perangkat, seperti status bahaya, status buzzer, status koneksi, serta nilai pembacaan terakhir. Selanjutnya, tabel \textit{alert\_logs} digunakan untuk menyimpan catatan peringatan yang dihasilkan sistem. Sementara itu, tabel \textit{device\_token} menyimpan token Firebase Cloud Messaging yang digunakan sebagai identitas tujuan pengiriman notifikasi ke aplikasi pada perangkat pengguna.
+
+Pemisahan data ke dalam tabel berdasarkan fungsinya memungkinkan sistem melakukan pengambilan informasi secara lebih terstruktur. Sebagai contoh, aplikasi dapat mengambil kondisi terkini perangkat dari \textit{device\_state}, sedangkan data historis pengukuran diperoleh dari \textit{sensor\_readings}. Dengan demikian, setiap tabel memiliki peran yang berbeda dalam mendukung kebutuhan penyimpanan dan pengaksesan informasi.
+
+\subsection{\textit{Representational State Transfer} (REST API)}
+\label{subsec:REST_API}
+
+\textit{Representational State Transfer} (REST) merupakan pendekatan arsitektur untuk komunikasi antarsistem melalui jaringan. Sistem yang menerapkan REST umumnya menggunakan protokol HTTP untuk melakukan operasi terhadap sumber daya (\textit{resource}). Setiap sumber daya dapat diakses melalui alamat tertentu dan dikelola menggunakan metode HTTP seperti GET, POST, PATCH, dan DELETE.
+
+API (\textit{Application Programming Interface}) merupakan antarmuka yang memungkinkan suatu aplikasi berkomunikasi dan bertukar data dengan layanan lain. REST API mengimplementasikan prinsip REST sehingga aplikasi dapat mengirimkan permintaan dan menerima respons melalui jaringan. Data yang dipertukarkan umumnya menggunakan format JSON agar dapat diproses oleh berbagai bahasa pemrograman.
+
+Supabase menyediakan REST API yang memungkinkan aplikasi mengakses objek basis data PostgreSQL melalui permintaan HTTP. Layanan tersebut dibangun menggunakan PostgREST sehingga tabel dan objek basis data yang diizinkan dapat diakses melalui antarmuka RESTful \cite{supabase_rest}.
+
+Pada sistem AEROS, REST API digunakan oleh aplikasi Flutter untuk mengambil informasi dari Supabase. Aplikasi mengirimkan permintaan sesuai kebutuhan data, seperti informasi kondisi perangkat, hasil pembacaan sensor, dan riwayat peringatan. Respons dari layanan diterima dalam format data yang kemudian diolah oleh aplikasi sebelum ditampilkan pada antarmuka pengguna. Dengan demikian, REST API menjadi penghubung antara lapisan penyimpanan data dan aplikasi seluler.
+
+\subsection{Flutter sebagai Kerangka Kerja Aplikasi Seluler}
+\label{subsec:Flutter}
+
+Flutter merupakan kerangka kerja pengembangan antarmuka pengguna yang dikembangkan oleh Google untuk membangun aplikasi lintas platform menggunakan satu basis kode. Flutter menggunakan pendekatan berbasis widget, yaitu setiap elemen antarmuka direpresentasikan sebagai komponen yang dapat disusun dan dikombinasikan untuk membentuk tampilan aplikasi. Pendekatan tersebut memungkinkan pengembang membangun antarmuka secara modular dan mengelola tampilan berdasarkan perubahan data atau kondisi aplikasi \cite{flutter_architecture}.
+
+Pada sistem AEROS, Flutter digunakan untuk mengembangkan aplikasi seluler yang berfungsi sebagai media pemantauan kondisi gas di dalam kabin kendaraan. Aplikasi ini menyediakan beberapa halaman utama, yaitu halaman beranda, halaman riwayat, dan halaman notifikasi. Halaman beranda menyajikan informasi kondisi terkini perangkat dan hasil pembacaan sensor. Halaman riwayat digunakan untuk menampilkan data pengukuran sebelumnya dalam bentuk grafik dan daftar kejadian. Sementara itu, halaman notifikasi menyajikan informasi peringatan yang dihasilkan sistem.
+
+Aplikasi Flutter mengambil data dari Supabase melalui REST API. Data yang diterima kemudian diproses dan ditampilkan dalam bentuk indikator nilai, informasi status, grafik, maupun daftar riwayat. Penggunaan Flutter memungkinkan pengembangan antarmuka aplikasi dilakukan secara terstruktur melalui komponen widget sehingga tampilan dan fungsi setiap halaman dapat dikelola sesuai kebutuhan sistem.
+
+\subsection{Firebase Cloud Messaging (FCM)}
+\label{subsec:FCM}
+
+Firebase Cloud Messaging (FCM) merupakan layanan pengiriman pesan yang memungkinkan aplikasi menerima pesan atau notifikasi dari layanan backend. FCM menyediakan mekanisme pengiriman pesan kepada aplikasi melalui token registrasi yang merepresentasikan tujuan pengiriman pada perangkat pengguna. Dengan menggunakan token tersebut, layanan backend dapat menentukan aplikasi tujuan ketika mengirimkan notifikasi \cite{firebase_fcm}.
+
+Pada sistem AEROS, FCM digunakan untuk menyampaikan notifikasi ketika kondisi perangkat telah dikategorikan sebagai bahaya oleh proses pengolahan data pada sisi backend. Token FCM yang diperoleh dari aplikasi disimpan pada tabel \textit{device\_token} di Supabase. Ketika terjadi perubahan status perangkat yang memenuhi kondisi pengiriman notifikasi, mekanisme backend menjalankan proses pengiriman pesan menggunakan layanan FCM.
+
+Proses pengiriman notifikasi pada AEROS melibatkan Supabase Database Webhook dan Edge Function. Database Webhook digunakan untuk memicu pemanggilan fungsi ketika terjadi perubahan data pada tabel yang telah ditentukan. Edge Function kemudian memeriksa status terbaru perangkat, mengambil token FCM dari basis data, dan meneruskan permintaan pengiriman notifikasi ke layanan Firebase. Apabila pengiriman berhasil, notifikasi dapat diterima dan ditampilkan pada perangkat seluler pengguna.
+
+Dengan mekanisme tersebut, FCM melengkapi fungsi aplikasi AEROS yang tidak hanya menyediakan pemantauan ketika aplikasi dibuka, tetapi juga memungkinkan pengguna memperoleh pemberitahuan ketika sistem mendeteksi kondisi bahaya.
+
 
 \section{Bahasa Pemrograman}
 \label{sec:Bahasa_Pemrograman}
 
-    % TODO: placeholder. C/C++ (Arduino framework dan PlatformIO), JavaScript (worker Node.js), Dart (Flutter; cek dengan teman software).
-    \lipsum[1]
+Bahasa pemrograman merupakan sarana yang digunakan untuk menyusun instruksi agar komputer atau perangkat elektronik dapat menjalankan fungsi tertentu. Setiap bahasa pemrograman memiliki karakteristik, struktur sintaks, dan kemampuan yang berbeda sehingga pemilihannya perlu disesuaikan dengan kebutuhan sistem yang dikembangkan. Pada sistem AEROS, penggunaan bahasa pemrograman dibedakan berdasarkan bagian sistem yang ditangani, yaitu pengembangan firmware pada mikrokontroler, pengelolaan proses backend, dan pengembangan aplikasi seluler.
+
+Bahasa pemrograman yang digunakan dalam pengembangan sistem AEROS meliputi C/C++, JavaScript, dan Dart. Ketiga bahasa tersebut memiliki peran yang saling melengkapi dalam membangun sistem mulai dari proses pengambilan data sensor hingga penyajian informasi kepada pengguna.
+
+\subsection{Bahasa C dan C++}
+\label{subsec:Bahasa_C_CPP}
+
+C merupakan bahasa pemrograman prosedural yang banyak digunakan dalam pengembangan perangkat lunak sistem, pemrograman perangkat keras, dan sistem tertanam (\textit{embedded system}). Bahasa ini menyediakan kemampuan untuk mengelola memori dan melakukan operasi tingkat rendah sehingga program dapat berinteraksi secara dekat dengan perangkat keras. C++ merupakan bahasa pemrograman yang dikembangkan dari C dengan menambahkan dukungan pemrograman berorientasi objek, seperti kelas dan objek, serta berbagai fitur abstraksi yang membantu penyusunan program secara modular.
+
+Karakteristik C dan C++ membuat kedua bahasa tersebut sesuai untuk pengembangan firmware pada mikrokontroler. Firmware merupakan perangkat lunak yang ditanamkan pada perangkat keras untuk mengendalikan fungsi dan perilaku perangkat. Dalam sistem AEROS, firmware ESP32 dikembangkan menggunakan C/C++ melalui Arduino Framework dengan lingkungan pengembangan PlatformIO. Program yang dibuat bertanggung jawab terhadap inisialisasi perangkat, komunikasi dengan sensor, pembacaan data, pengolahan hasil pengukuran, pengendalian komponen keluaran, dan pengiriman data melalui jaringan.
+
+Arduino Framework menyediakan kumpulan fungsi dan pustaka yang mempermudah pengembangan program pada mikrokontroler. Sementara itu, PlatformIO digunakan untuk mengelola konfigurasi proyek, dependensi pustaka, proses kompilasi, dan pengunggahan program ke perangkat. Kombinasi tersebut mendukung proses pengembangan firmware ESP32 secara terstruktur dan memungkinkan interaksi langsung antara program dengan komponen perangkat keras \cite{platformio_arduino}.
+
+\subsection{JavaScript}
+\label{subsec:Bahasa_JavaScript}
+
+JavaScript merupakan bahasa pemrograman yang awalnya dikembangkan untuk menambahkan kemampuan interaktif pada halaman web. Dalam perkembangannya, JavaScript dapat dijalankan di luar browser melalui lingkungan eksekusi seperti Node.js. Bahasa ini mendukung pemrograman asinkron yang memungkinkan suatu proses menunggu operasi input-output tanpa harus menghentikan keseluruhan eksekusi program. Fitur tersebut bermanfaat untuk aplikasi yang banyak melakukan komunikasi jaringan atau berinteraksi dengan layanan eksternal \cite{nodejs_intro}.
+
+Pada sistem AEROS, JavaScript digunakan untuk mengembangkan worker backend yang dijalankan menggunakan Node.js. Program tersebut bertugas menangani penerimaan pesan dari broker MQTT, mengelola data yang diterima dari perangkat, dan meneruskan informasi ke Supabase. Penggunaan JavaScript sesuai dengan kebutuhan tersebut karena worker harus menjalankan operasi komunikasi jaringan dan pertukaran data antara beberapa layanan.
+
+Dengan demikian, JavaScript berperan pada sisi backend untuk mendukung aliran data dari perangkat menuju basis data. Penggunaannya melengkapi firmware yang berjalan pada ESP32 dan aplikasi seluler yang dikembangkan menggunakan Flutter.
+
+\subsection{Dart}
+\label{subsec:Bahasa_Dart}
+
+Dart merupakan bahasa pemrograman yang dikembangkan oleh Google dan digunakan sebagai bahasa utama dalam pengembangan aplikasi Flutter. Dart mendukung pemrograman berorientasi objek, sistem tipe yang aman (\textit{type-safe}), serta mekanisme \textit{null safety} untuk membantu mengurangi kesalahan akibat penggunaan nilai kosong. Selain itu, Dart menyediakan fitur pemrograman asinkron melalui \textit{Future} dan \textit{Stream} yang dapat digunakan untuk menangani operasi yang membutuhkan waktu, seperti komunikasi jaringan dan pengambilan data dari layanan eksternal \cite{dart_overview}.
+
+Pada sistem AEROS, Dart digunakan untuk mengembangkan aplikasi seluler menggunakan Flutter. Bahasa ini digunakan untuk menyusun struktur halaman, membangun komponen antarmuka, mengatur perpindahan halaman, mengelola data aplikasi, serta menangani komunikasi dengan Supabase melalui REST API. Fitur asinkron pada Dart mendukung proses pengambilan data sensor dan informasi kondisi perangkat tanpa mengharuskan aplikasi menghentikan proses antarmuka selama permintaan jaringan berlangsung.
+
+Penggunaan Dart bersama Flutter memungkinkan aplikasi AEROS dikembangkan dengan struktur kode yang modular. Setiap halaman dan komponen antarmuka dapat disusun sebagai widget sehingga pengelolaan tampilan, data, dan interaksi pengguna dapat dilakukan secara terorganisasi. Dengan demikian, Dart berperan sebagai bahasa pemrograman pada sisi aplikasi yang menghubungkan data dari backend dengan informasi yang ditampilkan kepada pengguna.

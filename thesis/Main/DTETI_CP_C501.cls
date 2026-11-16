@@ -146,6 +146,10 @@
 \newcommand\NoRev[1]{\renewcommand\@NoRev{#1}}
 \newcommand\@NoRev{\@latex@error{Data "Nomor Revisi" belum diinputkan}\@ehc}
 
+% Tanggal penerbitan: bila \TglTerbit{...} tidak diisi, memakai tanggal compile (\today)
+\newcommand\TglTerbit[1]{\renewcommand\@TglTerbit{#1}}
+\newcommand\@TglTerbit{\today}
+
 %% Data Mahasiswa Capstone
 \newcommand\MHS[4]{\renewcommand\@MHSNama{#1}
 \renewcommand\@MHSNIM{#2}
@@ -234,31 +238,27 @@
 		{\Large {\MakeUppercase{\textbf{\@judul}}} \par}%
 		\vskip 5mm
 		{\Large {\textbf{DOKUMEN C-501}} \par}%
-		\vskip 8mm%
+		\vfill%   %% Jarak antarbagian halaman judul diratakan otomatis (\vfill); tambah/kurangi \vfill untuk mengatur
 		
 		\includegraphics[width=60mm]{Logo_UGM.pdf}
-		\vskip 8mm%
+		\vfill%
 		
 		\singlespacing
 		{\large {\textbf{Disusun Oleh :}} \par}%
 		\vskip 5mm%
 		
-		\begin{table}[!ht]
-			\begin{center}
-			\renewcommand{\arraystretch}{1.25}
-			\begin{tabular}{l C{1cm} l}
-				{\large {\textbf{\@MHSNama}} }	&	{}	&
-				{\large {\textbf{\@MHSNIM}} }		\\
-				{\large {\textbf{\csname @AngNama1\endcsname}} }	&	{}	&
-				{\large {\textbf{\csname @AngNIM1\endcsname}} }		\\
-				{\large {\textbf{\csname @AngNama2\endcsname}} }	&	{}	&
-				{\large {\textbf{\csname @AngNIM2\endcsname}} }		\\
-				{\large {\textbf{\csname @AngNama3\endcsname}} }	&	{}	&
-				{\large {\textbf{\csname @AngNIM3\endcsname}} }		\\
-			\end{tabular}
-			\end{center}
-		\end{table}
-		\vskip 10mm%
+		\renewcommand{\arraystretch}{1.25}
+		\begin{tabular}{l C{1cm} l}
+			{\large {\textbf{\@MHSNama}} }	&	{}	&
+			{\large {\textbf{\@MHSNIM}} }		\\
+			{\large {\textbf{\csname @AngNama1\endcsname}} }	&	{}	&
+			{\large {\textbf{\csname @AngNIM1\endcsname}} }		\\
+			{\large {\textbf{\csname @AngNama2\endcsname}} }	&	{}	&
+			{\large {\textbf{\csname @AngNIM2\endcsname}} }		\\
+			{\large {\textbf{\csname @AngNama3\endcsname}} }	&	{}	&
+			{\large {\textbf{\csname @AngNIM3\endcsname}} }		\\
+		\end{tabular}
+		\vfill%
 		
 		\onehalfspacing
 		{\large {\textbf{DOKUMENTASI SKRIPSI \textit{CAPSTONE PROJECT}}} \par}%
@@ -317,7 +317,7 @@
 					{6.}								&
 					{TANGGAL PENERBITAN}				&
 					{:}									&
-					{\protect\foreignlanguage{indonesian}{\today}}  \\
+					{\protect\foreignlanguage{indonesian}{\@TglTerbit}}  \\
 				\hline
 					\@barisMhs{7}{KETUA KELOMPOK}{\@MHSNama}{\@MHSNIM}{\@MHSProdiKonsentrasi}{\@MHSEmail}
 				\hline
